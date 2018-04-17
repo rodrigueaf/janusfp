@@ -1,0 +1,6 @@
+spring:
+  cloud:
+    config:
+      name: janusfp
+      discovery:
+        enabled: false

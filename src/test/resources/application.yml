@@ -1,0 +1,73 @@
+# A changer lors du développement
+spring:
+    application:
+        name: gestfinance-service
+    jackson:
+        serialization.write_dates_as_timestamps: false
+    devtools:
+        restart:
+            enabled: false
+    jpa:
+        show_sql: false
+        database: H2
+    datasource:
+        url: jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE
+        initialize: false
+    mail:
+        host: test@localhost
+        from: test@localhost
+        base-url: http://127.0.0.1:8080
+
+server:
+    port: 10345
+
+security:
+    basic:
+        enabled: false
+    instance:
+        hostname: localhost
+        port: 9999
+    oauth2:
+        resource:
+            filter-order: 3
+            loadBalanced: false
+            token-info-uri: http://localhost:10345/oauth/check_token
+        client:
+            client-id: internal
+            client-secret: internal
+            access-token-uri: http://localhost:10345/oauth/token
+            access-token-key: http://localhost:10345/oauth/token_key
+            token-service-id: service-security
+    token.url: http://localhost:10345/oauth/token?grant_type=password&username=admin&password=admin
+            
+endpoints:
+    cors:
+        allowed-origins: "*"
+        allowed-methods: GET, PUT, POST, DELETE, OPTIONS
+        allowed-headers: "*"
+        exposed-headers:
+        allow-credentials: true
+        max-age: 1800
+
+default.password: admin
+                        
+eureka:
+    instance:
+        hostname: 10.0.47.60
+        port: 8761
+        prefer-ip-address: true
+        # Intervalle de temps d'envoie du heartbeat à  Eureka
+        leaseRenewalIntervalInSeconds: 5
+        # Intervalle de temps d'attente avant de supprimer l'instance dans Eureka si celle ci n'envoie plus de heartbeat
+        lease-expiration-duration-in-seconds: 5
+        # L'identifiant de l'instance
+        instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    client:
+        # Désactiver l'auto enregistrement dans Eureka
+        registerWithEureka: false
+        # Désactiver la recherche du serveur Eureka au démarrage de l'instance
+        fetchRegistry: false
+        # Intervalle de temps après lequelle le client retente de rechercher le serveur Eureka
+        registryFetchIntervalSeconds: 5
+        serviceUrl:
+            defaultZone: http://${eureka.instance.hostname}:${eureka.instance.port}/eureka/

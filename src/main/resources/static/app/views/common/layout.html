@@ -1,0 +1,18 @@
+
+<!-- header Navbar -->
+<header role = "entete" ui-view = "header@"> </header>
+
+<!-- content -->
+<section layout="column" class="grey-100" flex>
+
+        <div class = "topbar">
+                <nav id="" class="container" role="topinfo" ui-view="topnavbar@" > </nav> 
+                <nav id="" class="container" role="navigation" ui-view="navigation@" > </nav>
+        </div> 
+
+        <section class="container" role="content" ui-view="content@" layout="column" flex> </section>
+
+        <footer class="container" role="footer" ui-view="footer@" > </footer>
+
+</section>
+<!-- / content -->

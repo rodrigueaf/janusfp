@@ -1,0 +1,184 @@
+<!-- entête titre et file d'arial -->
+<div class="card-heading">
+    <h2>Liste des comptes</h2>
+    <div ncy-breadcrumb></div>
+</div>
+
+<!-- entête buttons d'actions-->
+<div class="card-tools">
+    <ul class="list-inline">
+
+        <!-- action d'ajout -->
+        <li><a ui-sref="ui.comptes.edit"
+               id="btn-add" class="md-btn md-flat ">
+            <span class="mdi-content-add-box i-20"></span>
+        </a></li>
+
+        <!-- action d'actualisation de la liste -->
+        <li><a md-ink-ripple id="btn-refresh"
+               class="md-btn md-flat" ng-click="refresh()">
+            <span class="mdi-navigation-refresh i-20"></span>
+        </a></li>
+
+        <!-- action vers d'autres menus de paramétrage -->
+        <li class="dropdown">
+            <a md-ink-ripple data-toggle="dropdown" id="btn-option"
+               class="md-btn md-flat" aria-expanded="false">
+                <span class="mdi-navigation-more-vert icon i-20"></span>
+                <div class="md-ripple-container"></div>
+            </a>
+            <ul
+                    class="dropdown-menu dropdown-menu-scale pull-right pull-up top text-color">
+                <li><a ui-sref="ui.operations.edit">Ajouter un opération</a></li>
+                <li><a ui-sref="ui.operations.list">Liste des opérations</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<!-- Corps liste  -->
+<div class="card-body no-padding-v">
+    <section class="row">
+        <div class="col-md-12">
+
+            <!-- formulaire de recherche-->
+            <md-toolbar class="md-table-toolbar md-default bg-light lt" layout="column"
+                        layout-align="center center">
+                <div layout="row" layout-align="center center">
+                    <form class="form-inline" role="form" ng-submit="doSearch()">
+
+                        <!-- champ libelle -->
+                        <div class="form-group">
+                            <label class="sr-only" for="libelle">Libellé</label> <input
+                                type="text" ng-model="filterForm.compte.libelle"
+                                class="form-control" id="libelle"
+                                placeholder="Libellé">
+                        </div>
+
+                        <!-- champ état -->
+                        <div class="form-group">
+                            <label class="sr-only">Forme</label>
+                            <ui-select ng-model="filterForm.compte.compteForme" id="compteForme"
+                                       search-enabled="true" theme="bootstrap">
+                                <ui-select-match
+                                        placeholder="Sélectionner une forme...">{{$select.selected | translate}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="compteForme as compteForme in compteFormes">
+                                    <div ng-bind-html="compteForme | highlight: $select.search | translate"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+
+                        <!-- champ état -->
+                        <div class="form-group">
+                            <label class="sr-only">Type</label>
+                            <ui-select ng-model="filterForm.compte.compteType" id="compteType"
+                                       search-enabled="true" theme="bootstrap">
+                                <ui-select-match
+                                        placeholder="Sélectionner un type...">{{$select.selected | translate}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="compteType as compteType in compteTypes">
+                                    <div ng-bind-html="compteType | highlight: $select.search | translate"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+
+
+                        <!-- champ état -->
+                        <div class="form-group">
+                            <label class="sr-only">Etat</label>
+                            <ui-select ng-model="filterForm.compte.state" id="state"
+                                       search-enabled="true" theme="bootstrap">
+                                <ui-select-match
+                                        placeholder="Sélectionner un état...">{{$select.selected.value | translate}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="state.value as state in states">
+                                    <div ng-bind-html="state.value | highlight: $select.search | translate"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+
+                        <!-- button de recherche -->
+                        <div class="form-group">
+                            <button type="submit" id="btn-search"
+                                    class="btn btn-fw btn-primary">Rechercher
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </md-toolbar>
+
+            <md-table-pagination md-limit="query.limit"
+                                 md-on-paginate="getAll"
+                                 md-limit-options="query.limitOption" md-page="query.page"
+                                 md-boundary-links="true" md-total="{{query.count}}"
+                                 md-label="{{query.label}}" md-page-select></md-table-pagination>
+
+            <!-- liste des éléments du tableau -->
+            <md-table-container>
+                <table md-table md-progress="promise" md-row-select multiple ng-model="comptesSelected">
+                    <thead md-head md-order="" md-on-reorder="">
+                    <tr md-row>
+                        <th md-column><span>LIBELLE</span></th>
+                        <th md-column><span>TYPE</span></th>
+                        <th md-column><span>COMPTE PARENT</span></th>
+                        <th md-column><span>SOLDE</span></th>
+                        <th md-column class="text-center"><span>ETAT</span></th>
+                        <th md-column md-numeric><span>ACTIONS</span></th>
+                    </tr>
+                    </thead>
+                    <tbody md-body>
+                    <tr md-row ng-repeat="compte in comptes" md-select="compte" md-select-id="identifiant"
+                        md-auto-select="false">
+                        <td md-cell>{{compte.libelle}}</td>
+                        <td md-cell>{{compte.compteType | translate}}</td>
+                        <td md-cell>{{compte.compteParent.libelle}}</td>
+                        <td md-cell>{{compte.soldeCourant | number}}</td>
+                        <td md-cell class="text-center">
+						  <span ng-class="(compte.state == states[0].value) ? 'light-green' : 'bg-light' "
+                                class="label label-sm">
+								     {{compte.state | translate}}
+						   </span></td>
+
+                        <td md-cell>
+                            <!-- action désactivé -->
+                            <a id="btn-disabled" class="btn btn-xs btn-default"
+                               ng-show="compte.state == states[1].value"
+                               ng-click="changeState(compte.identifiant, states[0].value, $event)">
+                                <span class="fa fa-toggle-off"></span>
+                            </a>
+
+                            <!-- action activé -->
+                            <a id="btn-enabled" class="btn btn-xs btn-default text-success-dk"
+                               ng-show="compte.state == states[0].value"
+                               ng-click="changeState(compte.identifiant, states[1].value, $event)">
+                                <span class="fa fa-toggle-on"></span>
+                            </a>
+
+                            <!-- action détails -->
+                            <a id="btn-details" ui-sref="ui.comptes.edit({initData: compte, isDetails : true})"
+                               class="btn btn-xs btn-default text-warning-dk">
+                                <span class="fa fa-eye"></span>
+                            </a>
+
+                            <!-- action suppression -->
+                            <a id="btn-remove" class="btn btn-xs btn-default text-white bg-danger lt"
+                               ng-click="remove(compte.identifiant, $event)">
+                                <span class="fa fa-remove"></span>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+
+            <!-- pagination -->
+            <md-table-pagination md-limit="query.limit"
+                                 md-on-paginate="getAll"
+                                 md-limit-options="query.limitOption" md-page="query.page"
+                                 md-boundary-links="true" md-total="{{query.count}}"
+                                 md-label="{{query.label}}" md-page-select></md-table-pagination>
+        </div>
+    </section>
+</div>
+

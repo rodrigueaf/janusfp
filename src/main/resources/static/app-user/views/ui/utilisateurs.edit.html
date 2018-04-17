@@ -1,0 +1,168 @@
+<!-- entête titre et file d'arial -->
+<div class="card-heading" ng-init="onState()">
+    <h2>{{(isUpdating && !userForm.$visible) ? 'Détails' : 'Edition'}} du utilisateur</h2>
+    <div ncy-breadcrumb></div>
+</div>
+
+<!-- entête buttons d'actions-->
+<div class="card-tools">
+    <ul class="list-inline">
+
+        <!-- action de modification -->
+        <li ng-show="user.identifiant != null">
+            <a md-ink-ripple id="btn-update" class="md-btn md-flat"
+               ng-click="openForm(userForm)">
+                <span class="mdi-editor-mode-edit i-20"></span>
+            </a>
+        </li>
+
+        <!-- action de retour à la liste -->
+        <li><a id="btn-list" class="md-btn md-flat"
+               ui-sref="ui.utilisateurs.list">
+            <span class="mdi-action-view-list i-20"></span>
+        </a>
+        </li>
+    </ul>
+</div>
+
+<!-- corps -->
+<div class="card-body no-padding-b">
+    <section class="row">
+        <div class="col-md-12">
+
+            <!-- formulaire d'édition d'un utilisateur -->
+            <form class="form-horizontal"
+                  editable-form name="userForm"
+                  onaftersave="doEdit()">
+
+                <!-- champ caché identifiant -->
+                <div class="form-group" ng-init="isUpdating = (user.identifiant == null) ? false : true">
+                    <label class="col-sm-3 control-label hidden">Id</label>
+                    <div class="col-sm-6">
+                        <input type="hidden" ng-model="user.identifiant"
+                               class="form-control" id="identifiant">
+                        {{(!isUpdating) ? userForm.$show() : ''}}
+                    </div>
+                </div>
+
+                <!-- champ login de l'utilisateur -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Login
+                        <small class="text-danger">*</small>
+                        : </label>
+                    <div class="col-sm-6">
+                        <p ng-class="{'form-control-static':(isUpdating && !userForm.$visible)}">
+                           <span editable-text="user.login"
+                                 e-id="login"
+                                 ng-init="motif = '\\w'"
+                                 onbeforesave="validMinMaxAndPattern($data, 1, 50, motif )"
+                                 e-placeholder="Login de l'utilisateur"
+                                 e-formclass="form-control no-borders">
+                              {{ user.login || 'aucune valeur' }}
+                            </span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- champ nom de l'utilisateur -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Nom
+                        <small class="text-danger">*</small>
+                        : </label>
+                    <div class="col-sm-6">
+                        <p ng-class="{'form-control-static':(isUpdating && !userForm.$visible)}">
+                           <span editable-text="user.nom"
+                                 e-id="nom"
+                                 ng-init="motif = '\\w+' "
+                                 onbeforesave="validMinMaxAndPattern($data, 1, 50, motif )"
+                                 e-placeholder="Nom de l'utilisateur"
+                                 e-formclass="form-control no-borders">
+                              {{ user.nom || 'aucune valeur' }}
+                            </span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- champ prénom de l'utilisateur -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Prénom
+                        : </label>
+                    <div class="col-sm-6">
+                        <p ng-class="{'form-control-static':(isUpdating && !userForm.$visible)}">
+                           <span editable-text="user.prenom"
+                                 e-id="prenom"
+                                 ng-init="motif = '\\w+' "
+                                 e-placeholder="Prénom de l'utilisateur"
+                                 e-formclass="form-control no-borders">
+                              {{ user.prenom || 'aucune valeur' }}
+                            </span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- champ email de l'utilisateur -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Email
+                        <small class="text-danger">*</small>
+                        : </label>
+                    <div class="col-sm-6">
+                        <p ng-class="{'form-control-static':(isUpdating && !userForm.$visible)}">
+                           <span editable-text="user.email"
+                                 e-id="email"
+                                 e-type="email"
+                                 ng-init="motif = '\\w' "
+                                 onbeforesave="validMinMaxAndPattern($data, 5, 100, motif )"
+                                 e-placeholder="Email de l'utilisateur"
+                                 e-formclass="form-control no-borders">
+                              {{ user.email || 'aucune valeur' }}
+                            </span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- champ sélection du profil -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Profil
+                        <small class="text-danger">*</small>
+                        : </label>
+                    <div class="col-sm-6">
+                        <div editable-ui-select="user.profil"
+                             e-id="profil"
+                             onbeforesave="validRequired($data)"
+                             e-input-sm=".ui-select-search, .ui-select-match, .ui-select-toggle"
+                             ng-class="{'p-t-sm':(isUpdating && !userForm.$visible)}"
+                             data-e-form="userForm" data-e-name="profil" name="profil" e-position="auto"
+                             e-reset-search-input="false" e-append-to-body="true"
+                             data-e-ng-model="user.profil">
+                            {{user.profil.nom}}
+                            <editable-ui-select-match
+                                    placeholder="Sélectionner un profil...">
+                                {{$select.selected.nom}}
+                            </editable-ui-select-match>
+                            <editable-ui-select-choices
+                                    repeat="profil in profils | filter: $select.search">
+                                <div ng-bind-html="profil.nom | highlight: $select.search"></div>
+                            </editable-ui-select-choices>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- button de validation et d'annulation -->
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-6">
+							<span ng-show="userForm.$visible">
+								<button type="submit" md-ink-ripple id="btn-save"
+                                        class="md-btn md-raised m-b btn-fw green"
+                                        ng-disabled="userForm.$waiting">Enregistrer</button>
+								<button type="reset" md-ink-ripple
+                                        id="btn-cancel" class="md-btn md-flat btn-fw"
+                                        ng-disabled="userForm.$waiting"
+                                        ng-click="closeForm(userForm)">Annuler</button>
+							</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+

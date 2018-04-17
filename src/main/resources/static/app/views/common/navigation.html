@@ -1,0 +1,143 @@
+<nav class="navbar navbar-menu md-whiteframe-3dp">
+    <div class="navbar-header">
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".menu-navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#"> <span class="mdi-action-home"></span> </a>
+    </div>
+
+    <div class="collapse navbar-collapse menu-navbar-collapse">
+
+        <!--module operation-->
+        <ul class="nav navbar-nav">
+            <li class="dropdown mega-dropdown" ng-class="{active:$state.includes('ui.operations')}">
+                <a class="dropdown-toggle" data-toggle="dropdown">
+                    OPERATION
+                </a>
+                <ul class="dropdown-menu mega-dropdown-menu row">
+                    <li class="col-sm-3" permission permission-only="['ROLE_OPERATION']">
+                        <ul>
+                            <li class="dropdown-header">Gestion des opérations</li>
+                            <li ng-class="{active:$state.includes('ui.operations.editmono')}">
+                                <a ui-sref="ui.operations.editmono">Ajouter une opération monoligne</a>
+                            <li>
+                            <li ng-class="{active:$state.includes('ui.operations.editmulti')}">
+                                <a ui-sref="ui.operations.editmulti">Ajouter une opération multiligne</a>
+                            <li>
+                            <li ng-class="{active:$state.includes('ui.operations.list')}">
+                                <a ui-sref="ui.operations.list">Lister les opérations</a>
+                            <li>
+                        </ul>
+                    </li>
+                    <li class="col-sm-3" permission permission-only="['ROLE_BUDGET']">
+                        <ul>
+                            <li class="dropdown-header">Gestion du budget</li>
+                            <li ng-class="{active:$state.includes('ui.budgets.edit')}">
+                                <a ui-sref="ui.budgets.edit">Ajouter un budget</a>
+                            <li>
+                            <li ng-class="{active:$state.includes('ui.budgets.list')}">
+                                <a ui-sref="ui.budgets.list">Lister les budgets</a>
+                            <li>
+                        </ul>
+                    </li>
+                    <li class="col-sm-3" permission permission-only="['ROLE_EXPLOITATION']">
+                        <ul>
+                            <li class="dropdown-header">Gestion des exploitations</li>
+                            <li ng-class="{active:$state.includes('ui.exploitations.edit')}">
+                                <a ui-sref="ui.exploitations.edit">Ajouter une exploitation</a>
+                            <li>
+                            <li ng-class="{active:$state.includes('ui.exploitations.list')}">
+                                <a ui-sref="ui.exploitations.list">Lister les exploitations</a>
+                            <li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+        <!--module compte-->
+        <ul class="nav navbar-nav" permission permission-only="['ROLE_COMPTE']">
+            <li class="dropdown mega-dropdown" ng-class="{active:$state.includes('ui.comptes')}">
+                <a class="dropdown-toggle" data-toggle="dropdown">
+                    COMPTE
+                </a>
+                <ul class="dropdown-menu mega-dropdown-menu row">
+                    <li class="col-sm-3">
+                        <ul>
+                            <li class="dropdown-header">Gestion des comptes</li>
+                            <li ng-class="{active:$state.includes('ui.comptes.edit')}">
+                                <a ui-sref="ui.comptes.edit">Ajouter un compte</a>
+                            <li>
+                            <li ng-class="{active:$state.includes('ui.comptes.list')}">
+                                <a ui-sref="ui.comptes.list">Lister les comptes</a>
+                            <li>
+                            <li ng-class="{active:$state.includes('ui.comptes.prevreal')}">
+                                <a ui-sref="ui.comptes.prevreal">Situation entre prévision et réalisation de budget</a>
+                            <li>
+                            <li ng-class="{active:$state.includes('ui.comptes.grdlivre')}">
+                                <a ui-sref="ui.comptes.grdlivre">Grand livre de compte</a>
+                            <li>
+                        </ul>
+                    </li>
+                    <li class="col-sm-3">
+                        <ul>
+                            <li class="dropdown-header">Gestion de la trésorerie</li>
+                            <li ng-class="{active:$state.includes('ui.tresoreries.edit')}">
+                                <a ui-sref="ui.tresoreries.edit">Ajouter une trésorerie</a>
+                            <li>
+                            <li ng-class="{active:$state.includes('ui.tresoreries.list')}">
+                                <a ui-sref="ui.tresoreries.list">Lister les tresoreries</a>
+                            <li>
+                            <li ng-class="{active:$state.includes('ui.tresoreries.grdlivre')}">
+                                <a ui-sref="ui.tresoreries.grdlivre">Grand livre de trésorerie</a>
+                            <li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+        <!--module habilitation-->
+        <ul class="nav navbar-nav" permission permission-only="['ROLE_ADMIN']">
+            <li class="dropdown mega-dropdown" ng-class="{active:($state.includes('ui.profiles'))}">
+                <a class="dropdown-toggle" data-toggle="dropdown">
+                    ADMINISTRATION
+                </a>
+                <ul class="dropdown-menu mega-dropdown-menu row">
+                    <li class="col-sm-3">
+                        <ul>
+                            <li class="dropdown-header">Gestion des profils</li>
+                            <li ng-class="{active:$state.includes('ui.profiles.edit')}">
+                                <a ui-sref="ui.profiles.edit">Ajouter un profil</a>
+                            <li>
+                            <li ng-class="{active:$state.includes('ui.profiles.list')}">
+                                <a ui-sref="ui.profiles.list">Lister les profils</a>
+                            <li>
+                        </ul>
+                    </li>
+                    <li class="col-sm-3">
+                        <ul>
+                            <li class="dropdown-header">Gestion des utilisateurs</li>
+                            <li ng-class="{active:$state.includes('ui.utilisateurs.edit')}">
+                                <a ui-sref="ui.utilisateurs.edit">Ajouter un utilisateur</a>
+                            </li>
+                            <li ng-class="{active:$state.includes('ui.utilisateurs.list')}">
+                                <a ui-sref="ui.utilisateurs.list">Lister les utilisateurs</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <!--end module habilitation-->
+    </div>
+</nav>
+
+<script>
+    jQuery(document).on('click', '.mega-dropdown', function (e) {
+        e.stopPropagation();
+    })
+</script>

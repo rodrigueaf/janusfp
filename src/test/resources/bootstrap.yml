@@ -1,0 +1,6 @@
+spring:
+    cloud:
+        config:
+            name: gestfinance-service
+            discovery:
+                enabled: false

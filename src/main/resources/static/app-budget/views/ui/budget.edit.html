@@ -1,0 +1,123 @@
+<!-- entête titre et file d'arial -->
+<div class="card-heading" ng-init="onState()">
+    <h2>{{(isUpdating && !budgetForm.$visible) ? 'Détails' : 'Edition'}} du budget</h2>
+    <div ncy-breadcrumb></div>
+</div>
+
+<!-- entête buttons d'actions-->
+<div class="card-tools">
+    <ul class="list-inline">
+
+        <!-- action de modification -->
+        <li ng-show="budget.identifiant != null">
+            <a md-ink-ripple id="btn-update" class="md-btn md-flat"
+               ng-click="openForm(budgetForm)">
+                <span class="mdi-editor-mode-edit i-20"></span>
+            </a>
+        </li>
+
+        <!-- action de retour à la liste -->
+        <li><a id="btn-list" class="md-btn md-flat"
+               ui-sref="ui.budgets.list">
+            <span class="mdi-action-view-list i-20"></span>
+        </a>
+        </li>
+    </ul>
+</div>
+
+<!-- corps -->
+<div class="card-body no-padding-b">
+    <section class="row">
+        <div class="col-md-12">
+
+            <!-- formulaire d'édition d'un profil -->
+            <form class="form-horizontal"
+                  editable-form name="budgetForm"
+                  onaftersave="doEdit()">
+
+                <!-- champ caché id -->
+                <div class="form-group" ng-init="isUpdating = (budget.identifiant == null) ? false : true">
+                    <label class="col-sm-3 control-label hidden">Id</label>
+                    <div class="col-sm-6">
+                        <input type="hidden" ng-model="budget.identifiant"
+                               class="form-control" id="identifiant">
+                        {{(!isUpdating) ? budgetForm.$show() : ''}}
+                    </div>
+                </div>
+
+                <!-- champ libelle du budget -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Libellé
+                        <small class="text-danger">*</small>
+                        : </label>
+                    <div class="col-sm-6">
+                        <p ng-class="{'form-control-static':(isUpdating && !budgetForm.$visible)}">
+                           <span editable-text="budget.libelle"
+                                 e-id="libelle"
+                                 ng-init="motif = '\\w+' "
+                                 onbeforesave="validMinMaxAndPattern($data, 1, 50, motif)"
+                                 e-placeholder="Libellé"
+                                 e-formclass="form-control no-borders">
+                              {{ budget.libelle || 'aucune valeur' }}
+                            </span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Date début
+                        : </label>
+                    <div class="col-sm-6">
+                        <div>
+                            <label class="sr-only">Date début</label>
+                            <md-input-container class="no-margin bg-white md-block">
+                                <md-datepicker ng-required="true"
+                                               ng-disabled="(isUpdating && !budgetForm.$visible)"
+                                               ng-model="budget.dateDebut"
+                                               md-placeholder="Date début"
+                                               md-open-on-focus>
+                                </md-datepicker>
+                            </md-input-container>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Date fin
+                        : </label>
+                    <div class="col-sm-6">
+                        <div>
+                            <label class="sr-only">Date fin</label>
+                            <md-input-container class="no-margin bg-white md-block">
+                                <md-datepicker ng-required="false"
+                                               ng-disabled="(isUpdating && !budgetForm.$visible)"
+                                               ng-model="budget.dateFin"
+                                               md-placeholder="Date fin"
+                                               md-open-on-focus>
+                                </md-datepicker>
+                            </md-input-container>
+                        </div>
+                    </div>
+                </div>
+                <!-- date debut -->
+                <!-- date fin -->
+
+                <!-- button de validation et d'annulation -->
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-6">
+							<span ng-show="budgetForm.$visible">
+								<button type="submit" md-ink-ripple id="btn-save"
+                                        class="md-btn md-raised m-b btn-fw green"
+                                        ng-disabled="budgetForm.$waiting">Enregistrer</button>
+								<button type="reset" md-ink-ripple
+                                        id="btn-cancel" class="md-btn md-flat btn-fw"
+                                        ng-disabled="budgetForm.$waiting"
+                                        ng-click="closeForm(budgetForm)">Annuler</button>
+							</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+

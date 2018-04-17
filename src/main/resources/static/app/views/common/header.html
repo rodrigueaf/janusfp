@@ -1,0 +1,30 @@
+
+<div class=" navbar header no-radius indigo md-whiteframe-3dp" role = "entete">
+<div class = "container">
+    <div class = "row">
+        <div class = "col-md-12">
+            <div class = "pull-left">
+                <strong class="text-white">JanusFP</strong>
+            </div>
+            <div class="pull-right">
+                <div class="p-h-md text-white inline">
+                   Connecté en tant que : <strong>{{getUserName()}}</strong>
+                </div>
+                <div class="btn-group" dropdown="" ng-controller="AuthController">
+                    <a class="btn btn-default btn-sm text-orange" ng-click="logout()"><strong>Déconnexion</strong></a>
+                    <button type="button" class="btn btn-sm btn-default dropdown-toggle"
+                            dropdown-toggle="" aria-haspopup="true" aria-expanded="false">
+                        <span class="caret"></span>
+                      <span class="sr-only">info utilisateur</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                      <li><a href="">Identifiants</a></li>
+                      <li><a href="">Paramètres</a></li>
+                    </ul>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!-- / -->

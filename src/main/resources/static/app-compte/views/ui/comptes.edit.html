@@ -1,0 +1,176 @@
+<!-- entête titre et file d'arial -->
+<div class="card-heading" ng-init="onState()">
+    <h2>{{(isUpdating && !compteForm.$visible) ? 'Détails' : 'Edition'}} du compte</h2>
+    <div ncy-breadcrumb></div>
+</div>
+
+<!-- entête buttons d'actions-->
+<div class="card-tools">
+    <ul class="list-inline">
+
+        <!-- action de modification -->
+        <li ng-show="compte.identifiant != null">
+            <a md-ink-ripple id="btn-update" class="md-btn md-flat"
+               ng-click="openForm(compteForm)">
+                <span class="mdi-editor-mode-edit i-20"></span>
+            </a>
+        </li>
+
+        <!-- action de retour à la liste -->
+        <li><a id="btn-list" class="md-btn md-flat"
+               ui-sref="ui.comptes.list">
+            <span class="mdi-action-view-list i-20"></span>
+        </a>
+        </li>
+    </ul>
+</div>
+
+<!-- corps -->
+<div class="card-body no-padding-b">
+    <section class="row">
+        <div class="col-md-12">
+
+            <!-- formulaire d'édition d'un profil -->
+            <form class="form-horizontal"
+                  editable-form name="compteForm"
+                  onaftersave="doEdit()">
+
+                <!-- champ caché id -->
+                <div class="form-group" ng-init="isUpdating = (compte.identifiant == null) ? false : true">
+                    <label class="col-sm-3 control-label hidden">Id</label>
+                    <div class="col-sm-6">
+                        <input type="hidden" ng-model="compte.identifiant"
+                               class="form-control" id="identifiant">
+                        {{(!isUpdating) ? compteForm.$show() : ''}}
+                    </div>
+                </div>
+
+                <!-- champ libelle du profil -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Libellé
+                        <small class="text-danger">*</small>
+                        : </label>
+                    <div class="col-sm-6">
+                        <p ng-class="{'form-control-static':(isUpdating && !compteForm.$visible)}">
+                           <span editable-text="compte.libelle"
+                                 e-id="libelle"
+                                 ng-init="motif = '\\w+' "
+                                 onbeforesave="validMinMaxAndPattern($data, 1, 50, motif)"
+                                 e-placeholder="Libellé"
+                                 e-formclass="form-control no-borders">
+                              {{ compte.libelle || 'aucune valeur' }}
+                            </span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- champ sélection du type compte -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Type de compte
+                        <small class="text-danger">*</small>
+                        : </label>
+                    <div class="col-sm-6">
+                        <div editable-ui-select="compte.compteType"
+                             e-id="compteType"
+                             onbeforesave="validRequired($data)"
+                             e-input-sm=".ui-select-search, .ui-select-match, .ui-select-toggle"
+                             ng-class="{'p-t-sm':(isUpdating && !compteForm.$visible)}"
+                             data-e-form="compteForm" data-e-name="compteType" name="compteType" e-position="auto"
+                             e-reset-search-input="false" e-append-to-body="true"
+                             data-e-ng-model="compte.compteType">
+                            {{compte.compteType}}
+                            <editable-ui-select-match placeholder="Sélectionner le type compte...">
+                                {{$select.selected | translate}}
+                            </editable-ui-select-match>
+                            <editable-ui-select-choices repeat="compteType in compteTypes | filter: $select.search">
+                                <div ng-bind-html="compteType | highlight: $select.search | translate"></div>
+                            </editable-ui-select-choices>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- champ sélection de la forme du compte -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Forme de compte
+                        : </label>
+                    <div class="col-sm-6">
+                        <div editable-ui-select="compte.compteForme"
+                             e-id="compteForme"
+                             e-input-sm=".ui-select-search, .ui-select-match, .ui-select-toggle"
+                             ng-class="{'p-t-sm':(isUpdating && !compteForm.$visible)}"
+                             data-e-form="compteForm" data-e-name="compteForme" name="compteForme" e-position="auto"
+                             e-reset-search-input="false" e-append-to-body="true"
+                             data-e-ng-model="compte.compteForme">
+                            {{compte.compteForme}}
+                            <editable-ui-select-match placeholder="Sélectionner le type compte...">
+                                {{$select.selected | translate}}
+                            </editable-ui-select-match>
+                            <editable-ui-select-choices repeat="compteForme in compteFormes | filter: $select.search">
+                                <div ng-bind-html="compteForme | highlight: $select.search | translate"></div>
+                            </editable-ui-select-choices>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- champ utilisable -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Utilisable?
+                    </label>
+                    <div class="col-sm-6">
+                        <a href="#" editable-checkbox="compte.utilisable" e-title="">
+                            {{ compte.utilisable && "Oui" || "Non" }}
+                        </a>
+                    </div>
+                </div>
+
+                <!-- champ sélection du compte parent -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Compte parent
+                        : </label>
+                    <div class="col-sm-6">
+                        <div editable-ui-select="compte.compteParent"
+                             e-id = "compteParent"
+                             e-input-sm =".ui-select-search, .ui-select-match, .ui-select-toggle"
+                             ng-class ="{'p-t-sm':(!compteForm.$visible)}"
+                             data-e-form="compteForm" data-e-name="compteParent" name="compteParent" e-position="auto"
+                             e-reset-search-input="false" e-append-to-body="true"
+                             data-e-ng-model="compte.compteParent">
+                            {{ compte.compteParent.libelle}}
+                            <editable-ui-select-match placeholder="Sélectionner le compte parent...">
+                                {{$select.selected.libelle}}
+                            </editable-ui-select-match>
+                            <editable-ui-select-choices
+                                    refresh="fetch($select)"
+                                    refresh-delay="300"
+                                    repeat="compte as compte in comptes | filter: $select.search">
+                                <div ng-bind-html="compte.libelle | highlight: $select.search"></div>
+                                <div ng-show ="($index == $select.items.length - 1) && !endOfList">
+                                    <button class="btn btn-xs btn-default"
+                                            style="width: 100%; margin-top: 5px;"
+                                            ng-mouseover="fetch($select, $event)"
+                                            ng-disabled="loading">afficher plus...</button>
+                                </div>
+                            </editable-ui-select-choices>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- button de validation et d'annulation -->
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-6">
+							<span ng-show="compteForm.$visible">
+								<button type="submit" md-ink-ripple id="btn-save"
+                                        class="md-btn md-raised m-b btn-fw green"
+                                        ng-disabled="compteForm.$waiting">Enregistrer</button>
+								<button type="reset" md-ink-ripple
+                                        id="btn-cancel" class="md-btn md-flat btn-fw"
+                                        ng-disabled="compteForm.$waiting"
+                                        ng-click="closeForm(compteForm)">Annuler</button>
+							</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+

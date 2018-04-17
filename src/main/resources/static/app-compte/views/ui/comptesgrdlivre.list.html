@@ -1,0 +1,110 @@
+<!-- entête titre et file d'arial -->
+<div class="card-heading">
+    <h2>Grand Livre du compte
+        {{(compteForSearch.identifiant !== null) ? '"' + compteForSearch.libelle + '"' : ''}}</h2>
+    <div ncy-breadcrumb></div>
+</div>
+
+<!-- Corps liste  -->
+<div class="card-body no-padding-v">
+    <section class="row">
+        <div class="col-md-12">
+            {{compteGrdLivreForm.$show()}}
+            <!-- formulaire de recherche-->
+            <md-toolbar class="md-table-toolbar md-default bg-light lt" layout="column"
+                        layout-align="center center">
+                <div layout="row" layout-align="center center">
+                    <form editable-form class="form-inline" onaftersave="doSearch()" name="compteGrdLivreForm">
+                        <div class="form-group">
+                            <h5 class="col-sm-3 control-label">Compte
+                                : </h5>
+                            <div class="col-sm-3">
+                                <div editable-ui-select="compteForSearch"
+                                     e-id="compteForSearch"
+                                     onbeforesave="validRequired($data)"
+                                     e-input-sm=".ui-select-search, .ui-select-match, .ui-select-toggle"
+                                     ng-class="{'p-t-sm':(!compteGrdLivreForm.$visible)}"
+                                     data-e-form="compteGrdLivreForm" data-e-name="compteForSearch"
+                                     name="compteForSearch"
+                                     e-position="auto"
+                                     e-reset-search-input="false" e-append-to-body="true"
+                                     data-e-ng-model="compteForSearch">
+                                    {{compteForSearch}}
+                                    <editable-ui-select-match placeholder="Sélectionner un compte...">
+                                        {{$select.selected.libelle}}
+                                    </editable-ui-select-match>
+                                    <editable-ui-select-choices
+                                            refresh="fetchCompte($select)"
+                                            refresh-delay="500"
+                                            repeat="compte as compte in comptes | filter: $select.search">
+                                        <div ng-bind-html="compte.libelle | highlight: $select.search"></div>
+                                        <div ng-show="($index == $select.items.length - 1) && !endOfList">
+                                            <button class="btn btn-xs btn-default"
+                                                    style="width: 100%; margin-top: 5px;"
+                                                    ng-mouseover="fetchCompte($select, $event)"
+                                                    ng-disabled="loading">afficher plus...
+                                            </button>
+                                        </div>
+                                    </editable-ui-select-choices>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <md-input-container class="no-margin bg-white md-block">
+                                <md-datepicker ng-model="dateDebut"
+                                               md-placeholder="Date début"
+                                               md-open-on-focus>
+                                </md-datepicker>
+                            </md-input-container>
+                        </div>
+
+                        <div class="form-group">
+                            <md-input-container class="no-margin bg-white md-block">
+                                <md-datepicker ng-model="dateFin"
+                                               md-placeholder="Date fin"
+                                               md-open-on-focus>
+                                </md-datepicker>
+                            </md-input-container>
+                        </div>
+
+                        <!-- button de recherche -->
+                        <div class="form-group">
+                            <button type="submit" id="btn-search"
+                                    class="btn btn-fw btn-primary">Afficher
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </md-toolbar>
+
+            <!-- liste des éléments du tableau -->
+            <md-table-container>
+                <table md-table md-progress="promise">
+                    <thead md-head md-order="" md-on-reorder="">
+                    <tr md-row>
+                        <th md-column><span>DATE</span></th>
+                        <th md-column><span>DESCRIPTION</span></th>
+                        <th md-column><span>MONTANT</span></th>
+                    </tr>
+                    </thead>
+                    <tbody md-body>
+                    <tr md-row ng-repeat="operationDetails in grandLivreList.operationDetails">
+                        <td md-cell>{{operationDetails.operation.dateEnregistement | date:'dd/MM/yyyy'}}</td>
+                        <td md-cell>{{operationDetails.operation.description}}</td>
+                        <td md-cell>{{operationDetails.montant | number}}</td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr md-row>
+                        <td md-cell colspan="2">TOTAL</td>
+                        <td md-cell>{{grandLivreList.soldeTotal | number}}</td>
+                    </tr>
+                    </tfoot>
+                </table>
+                <br/>
+            </md-table-container>
+        </div>
+    </section>
+</div>
+

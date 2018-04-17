@@ -1,0 +1,51 @@
+<!-- entête titre et file d'arial -->
+<div class="card-heading" ng-init="onState()">
+    <h2>Attribution des droits au profil {{profil.nom}}</h2>
+    <div ncy-breadcrumb></div>
+</div>
+
+<!-- entête buttons d'actions-->
+<div class="card-tools">
+    <ul class="list-inline">
+    </ul>
+</div>
+
+<!-- corps -->
+<div class="card-body no-padding-b">
+    <section class="row">
+        <div class="col-md-12">
+
+            {{profilePermissionForm.$show()}}
+
+            <!-- formulaire d'édition d'un profil -->
+            <form class="form-horizontal"
+                  editable-form name="profilePermissionForm"
+                  onaftersave="ajouter()">
+
+                <div id="jsTree"
+                     js-tree="treeConfig"
+                     ng-model="jsTreeData"
+                     tree="treeInstance"
+                     tree-events="select_node:selectNodeCB;deselect_node:deselectNodeCB"
+                     getchecked>
+                </div>
+
+                <!-- button de validation et d'annulation -->
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-6">
+							<span ng-show="profilePermissionForm.$visible">
+								<button type="submit" md-ink-ripple id="btn-save"
+                                        class="md-btn md-raised m-b btn-fw green"
+                                        ng-disabled="profilePermissionForm.$waiting">Enregistrer</button>
+								<button type="reset" md-ink-ripple
+                                        id="btn-cancel" class="md-btn md-flat btn-fw"
+                                        ng-disabled="profilePermissionForm.$waiting"
+                                        ng-click="closeForm(profilePermissionForm)">Annuler</button>
+							</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+

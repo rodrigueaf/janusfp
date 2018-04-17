@@ -1,0 +1,29 @@
+<div class="center-block w-xxl w-auto-xs p-v-md">
+    <div class="navbar">
+        <div class="navbar-brand m-t-lg text-center">
+            <span class="m-l inline">JanusFP</span>
+        </div>
+    </div>
+
+    <div ng-controller="AuthController" class="p-lg panel md-whiteframe-z1 text-color m">
+        <div class="m-b text-sm text-danger text-center">
+            {{msgError | translate}}
+        </div>
+        <form name="form" ng-submit="login(true)">
+            <div class="md-form-group float-label">
+                <input type="text" class="md-input" ng-model="user.username" required>
+                <label>Nom d'utilisateur</label>
+            </div>
+            <div class="md-form-group float-label">
+                <input type="password" class="md-input" ng-model="user.password" required>
+                <label>Mot de passe</label>
+            </div>
+            <button md-ink-ripple type="submit" class="md-btn md-raised green btn-block p-h-md">Se Connecter</button>
+        </form>
+    </div>
+
+    <div class="p-v-lg text-center">
+        <div class="m-b">JanusFP v1.0</div>
+        <div>&copy; 2018 - powered By Genius Technologies</div>
+    </div>
+</div>

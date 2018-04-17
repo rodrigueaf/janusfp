@@ -1,0 +1,120 @@
+<!-- entête titre et file d'arial -->
+<div class="card-heading">
+    <h2>Grand Livre de la trésorerie
+        {{(tresorerieForSearch.identifiant !== null) ? '"' + tresorerieForSearch.libelle + '"' : ''}}</h2>
+    <div ncy-breadcrumb></div>
+</div>
+
+<!-- Corps liste  -->
+<div class="card-body no-padding-v">
+    <section class="row">
+        <div class="col-md-12">
+            {{tresorerieGrdLivreForm.$show()}}
+            <!-- formulaire de recherche-->
+            <md-toolbar class="md-table-toolbar md-default bg-light lt" layout="column"
+                        layout-align="center center">
+                <div layout="row" layout-align="center center">
+                    <form editable-form class="form-inline" onaftersave="doSearch()" name="tresorerieGrdLivreForm">
+                        <div class="form-group">
+                            <h5 class="col-sm-3 control-label">Trésorerie
+                                : </h5>
+                            <div class="col-sm-3">
+                                <div editable-ui-select="tresorerieForSearch"
+                                     e-id="tresorerieForSearch"
+                                     onbeforesave="validRequired($data)"
+                                     e-input-sm=".ui-select-search, .ui-select-match, .ui-select-toggle"
+                                     ng-class="{'p-t-sm':(!tresorerieGrdLivreForm.$visible)}"
+                                     data-e-form="tresorerieGrdLivreForm" data-e-name="tresorerieForSearch"
+                                     name="tresorerieForSearch"
+                                     data-e-style="min-width:300px !important;"
+                                     e-position="auto"
+                                     e-reset-search-input="false" e-append-to-body="true"
+                                     data-e-ng-model="tresorerieForSearch">
+                                    {{ tresorerieForSearch.comptePhysique.libelle + ' / '
+                                    + tresorerieForSearch.compteLogique.libelle}}
+                                    <editable-ui-select-match placeholder="Sélectionner une tresorerie...">
+                                        {{$select.selected.comptePhysique.libelle + ' / ' +
+                                        $select.selected.compteLogique.libelle}}
+                                    </editable-ui-select-match>
+                                    <editable-ui-select-choices
+                                            refresh="fetchTresorerie($select)"
+                                            refresh-delay="500"
+                                            repeat="tresorerie as tresorerie in tresoreries | filter: $select.search">
+                                        <div ng-bind-html="(tresorerie.comptePhysique.libelle + ' / ' + tresorerie.compteLogique.libelle)
+                                         | highlight: $select.search"></div>
+                                        <div ng-show="($index == $select.items.length - 1) && !endOfList">
+                                            <button class="btn btn-xs btn-default"
+                                                    style="width: 100%; margin-top: 5px;"
+                                                    ng-mouseover="fetchTresorerie($select, $event)"
+                                                    ng-disabled="loading">afficher plus...
+                                            </button>
+                                        </div>
+                                    </editable-ui-select-choices>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <md-input-container class="no-margin bg-white md-block">
+                                <md-datepicker ng-model="dateDebut"
+                                               md-placeholder="Date début"
+                                               md-open-on-focus>
+                                </md-datepicker>
+                            </md-input-container>
+                        </div>
+
+                        <div class="form-group">
+                            <md-input-container class="no-margin bg-white md-block">
+                                <md-datepicker ng-model="dateFin"
+                                               md-placeholder="Date fin"
+                                               md-open-on-focus>
+                                </md-datepicker>
+                            </md-input-container>
+                        </div>
+
+                        <!-- button de recherche -->
+                        <div class="form-group">
+                            <button type="submit" id="btn-search"
+                                    class="btn btn-fw btn-primary">Afficher
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </md-toolbar>
+
+            <!-- liste des éléments du tableau -->
+            <md-table-container>
+                <table md-table md-progress="promise">
+                    <thead md-head md-order="" md-on-reorder="">
+                    <tr md-row>
+                        <th md-column><span>DATE</span></th>
+                        <th md-column><span>DESCRIPTION</span></th>
+                        <th md-column><span>MONTANT DEBIT</span></th>
+                        <th md-column><span>MONTANT CREDIT</span></th>
+                        <th md-column><span></span></th>
+                    </tr>
+                    </thead>
+                    <tbody md-body>
+                    <tr md-row ng-repeat="operationDetails in grandLivreTresorerieList.operationDetails">
+                        <td md-cell>{{operationDetails.operation.dateEnregistement | date:'dd/MM/yyyy'}}</td>
+                        <td md-cell>{{operationDetails.operation.description}}</td>
+                        <td md-cell>{{(operationDetails.operationSens === 'DEBIT') ? operationDetails.montant : 0 | number}}</td>
+                        <td md-cell>{{(operationDetails.operationSens === 'CREDIT') ? operationDetails.montant : 0 | number}}</td>
+                        <td md-cell></td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr md-row>
+                        <td md-cell colspan="2">TOTAL</td>
+                        <td md-cell>{{grandLivreTresorerieList.soldeDebitTotal | number}}</td>
+                        <td md-cell>{{grandLivreTresorerieList.soldeCreditTotal | number}}</td>
+                        <td md-cell>{{grandLivreTresorerieList.soldeDebitTotal - grandLivreTresorerieList.soldeCreditTotal | number}}</td>
+                    </tr>
+                    </tfoot>
+                </table>
+                <br/>
+            </md-table-container>
+        </div>
+    </section>
+</div>
+

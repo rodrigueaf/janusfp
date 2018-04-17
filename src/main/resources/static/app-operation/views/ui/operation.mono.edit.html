@@ -1,0 +1,314 @@
+<!-- entête titre et file d'arial -->
+<div class="card-heading" ng-init="onState()">
+    <h2>Création / Mise à jour d'une opération monoligne {{(operationVM.operation.budget !== null) ? ' au budget "' +
+        operationVM.operation.budget.libelle + '"': ''}}</h2>
+    <div ncy-breadcrumb></div>
+</div>
+
+<!-- entête buttons d'actions-->
+<div class="card-tools">
+    <ul class="list-inline">
+
+        <!-- action de retour à la liste -->
+        <li><a id="btn-list" class="md-btn md-flat"
+               ui-sref="ui.operations.list({budget: operationVM.operation.budget, exploitation : operationVM.operation.exploitation})">
+            <span class="mdi-action-view-list i-20"></span>
+        </a>
+        </li>
+    </ul>
+</div>
+
+<!-- corps -->
+<div class="card-body no-padding-b">
+    <section class="row">
+        <div class="col-md-12">
+
+            {{operationForm.$show()}}
+
+            <!-- formulaire d'édition d'une opération -->
+            <form class="form-horizontal"
+                  editable-form name="operationForm"
+                  onaftersave="doEdit($event)">
+
+                <div class="form-group" ng-show="operationVM.operation.budget == null">
+                    <label class="col-sm-3 control-label">Date
+                        <small class="text-danger">*</small>
+                        : </label>
+                    <div class="col-sm-6">
+                        <div>
+                            <label class="sr-only">Date</label>
+                            <md-input-container class="no-margin bg-white md-block">
+                                <md-datepicker ng-required="true"
+                                               ng-disabled="(isUpdating && !operationForm.$visible)"
+                                               ng-model="operationVM.operation.dateEnregistement"
+                                               md-placeholder="Date"
+                                               md-open-on-focus>
+                                </md-datepicker>
+                            </md-input-container>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- champ description -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Description
+                        <small class="text-danger">*</small>
+                        : </label>
+                    <div class="col-sm-6">
+                        <p ng-class="{'form-control-static':(isUpdating && !operationForm.$visible)}">
+                           <span editable-text="operationVM.operation.description"
+                                 e-ng-change="afficherAjouterLigneBouton($data)"
+                                 e-id="description"
+                                 ng-init="motif = '\\w+' "
+                                 onbeforesave="validMinMaxAndPattern($data, 1, 500, motif)"
+                                 e-placeholder="Description"
+                                 e-formclass="form-control no-borders">
+                              {{ operationVM.operation.description || 'aucune valeur' }}
+                            </span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- champ sélection du type d'opération-->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Type d'opération
+                        <small class="text-danger">*</small>
+                        : </label>
+                    <div class="col-sm-6">
+                        <div editable-ui-select="operationVM.operation.operationType"
+                             e-ng-change="loadSchemaByTypeOperation($data)"
+                             e-id="operationType"
+                             onbeforesave="validRequired($data)"
+                             e-input-sm=".ui-select-search, .ui-select-match, .ui-select-toggle"
+                             ng-class="{'p-t-sm':(isUpdating && !operationForm.$visible)}"
+                             data-e-form="operationForm" data-e-name="operationType" name="operationType"
+                             e-position="auto"
+                             e-reset-search-input="false" e-append-to-body="true"
+                             data-e-ng-model="operationVM.operation.operationType">
+                            {{operationVM.operation.operationType}}
+                            <editable-ui-select-match
+                                    placeholder="Sélectionner un type d'opération...">
+                                {{$select.selected | translate}}
+                            </editable-ui-select-match>
+                            <editable-ui-select-choices
+                                    repeat="operationType in operationTypes | filter: $select.search">
+                                <div ng-bind-html="operationType | highlight: $select.search | translate"></div>
+                            </editable-ui-select-choices>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group" ng-show="operationVM.operation.budget == null">
+                    <label class="col-sm-3 control-label">Budget
+                        : </label>
+                    <div class="col-sm-6">
+                        <div editable-ui-select="budgetForSearch"
+                             e-ng-change="filtrerOperationBudget($data)"
+                             e-id="budgetForSearch"
+                             e-input-sm=".ui-select-search, .ui-select-match, .ui-select-toggle"
+                             ng-class="{'p-t-sm':(!operationForm.$visible)}"
+                             data-e-form="operationForm" data-e-name="budgetForSearch" name="budgetForSearch"
+                             e-position="auto"
+                             e-reset-search-input="false" e-append-to-body="true"
+                             data-e-style="min-width:300px !important;"
+                             data-e-ng-model="budgetForSearch">
+                            {{budgetForSearch}}
+                            <editable-ui-select-match placeholder="Sélectionner un budget...">
+                                {{$select.selected.libelle}}
+                            </editable-ui-select-match>
+                            <editable-ui-select-choices
+                                    refresh="fetchBudget($select)"
+                                    refresh-delay="500"
+                                    repeat="budget as budget in budgets | filter: $select.search">
+                                <div ng-bind-html="budget.libelle | highlight: $select.search"></div>
+                                <div ng-show="($index == $select.items.length - 1) && !endOfList">
+                                    <button class="btn btn-xs btn-default"
+                                            style="width: 100%; margin-top: 5px;"
+                                            ng-mouseover="fetchBudget($select, $event)"
+                                            ng-disabled="loading">afficher plus...
+                                    </button>
+                                </div>
+                            </editable-ui-select-choices>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" ng-show="operationVM.operation.budget == null">
+                    <label class="col-sm-3 control-label">Opération du budget
+                        : </label>
+                    <div class="col-sm-6">
+                        <div editable-ui-select="operationVM.operation.operationBudget"
+                             e-ng-change="loadSchemaByOperationBudget($data)"
+                             e-id="operationBudget"
+                             e-input-sm=".ui-select-search, .ui-select-match, .ui-select-toggle"
+                             ng-class="{'p-t-sm':(!compteForm.$visible)}"
+                             data-e-form="operationForm" data-e-name="operationBudget" name="operationBudget"
+                             e-position="auto"
+                             data-e-style="min-width:500px !important;"
+                             e-reset-search-input="false" e-append-to-body="true"
+                             data-e-ng-model="operationVM.operation.operationBudget">
+                            {{operationVM.operation.operationBudget}}
+                            <editable-ui-select-match placeholder="Sélectionner le opération du budget...">
+                                {{$select.selected.description}}
+                            </editable-ui-select-match>
+                            <editable-ui-select-choices
+                                    refresh="fetchOperationBudget($select)"
+                                    refresh-delay="300"
+                                    repeat="operationBudget as operationBudget in operationsBudget | filter: $select.search">
+                                <div ng-bind-html="operationBudget.description | highlight: $select.search"></div>
+                                <div ng-show="($index == $select.items.length - 1) && !endOfList">
+                                    <button class="btn btn-xs btn-default"
+                                            style="width: 100%; margin-top: 5px;"
+                                            ng-mouseover="fetchOperationBudget($select, $event)"
+                                            ng-disabled="loading">afficher plus...
+                                    </button>
+                                </div>
+                            </editable-ui-select-choices>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" ng-show="operationVM.operation.budget == null">
+                    <label class="col-sm-3 control-label">Exploitation
+                        <small class="text-danger">*</small>
+                        : </label>
+                    <div class="col-sm-6">
+                        <div editable-ui-select="operationVM.operation.exploitation"
+                             e-id="exploitation"
+                             onbeforesave="validRequired($data)"
+                             e-input-sm=".ui-select-search, .ui-select-match, .ui-select-toggle"
+                             ng-class="{'p-t-sm':(!compteForm.$visible)}"
+                             data-e-form="operationForm" data-e-name="exploitation" name="exploitation"
+                             e-position="auto"
+                             data-e-style="min-width:500px !important;"
+                             e-reset-search-input="false" e-append-to-body="true"
+                             data-e-ng-model="operationVM.operation.exploitation">
+                            {{operationVM.operation.exploitation}}
+                            <editable-ui-select-match placeholder="Sélectionner une exploitation...">
+                                {{$select.selected.libelle}}
+                            </editable-ui-select-match>
+                            <editable-ui-select-choices
+                                    refresh="fetchExploitation($select)"
+                                    refresh-delay="300"
+                                    repeat="exploitation as exploitation in exploitations | filter: $select.search">
+                                <div ng-bind-html="exploitation.libelle | highlight: $select.search"></div>
+                                <div ng-show="($index == $select.items.length - 1) && !endOfList">
+                                    <button class="btn btn-xs btn-default"
+                                            style="width: 100%; margin-top: 5px;"
+                                            ng-mouseover="fetchExploitation($select, $event)"
+                                            ng-disabled="loading">afficher plus...
+                                    </button>
+                                </div>
+                            </editable-ui-select-choices>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- champ description -->
+                <div class="form-group" ng-show="isMonoLigne">
+                    <label class="col-sm-3 control-label">Montant
+                        <small class="text-danger">*</small>
+                        : </label>
+                    <div class="col-sm-3">
+                        <p ng-class="{'form-control-static':(isUpdating && !operationForm.$visible)}">
+                           <span editable-text="montantOperation"
+                                 e-id="montantOperation"
+                                 ng-init="motif = '\\d+' "
+                                 onbeforesave="validRequired($data)"
+                                 e-placeholder="Montant"
+                                 e-formclass="form-control no-borders">
+                              {{ montantOperation || 'aucune valeur' }}
+                            </span>
+                        </p>
+                    </div>
+                </div>
+
+                <table class="table table-bordered table-hover table-condensed">
+                    <tr style="font-weight: bold">
+                        <td style="width:30%">Compte</td>
+                    </tr>
+                    <tr ng-repeat="sc in operationVM.operationDetails | filter:filterSchema">
+                        <td ng-show="!sc.isTresorerie">
+                            <div editable-ui-select="sc.compte"
+                                 e-id="compte"
+                                 e-input-sm=".ui-select-search, .ui-select-match, .ui-select-toggle"
+                                 ng-class="{'p-t-sm':(!operationForm.$visible)}"
+                                 data-e-form="operationForm" data-e-name="compte" name="compte" e-position="auto"
+                                 e-reset-search-input="false" e-append-to-body="true"
+                                 data-e-style="min-width:500px !important;"
+                                 data-e-ng-model="sc.compte">
+                                {{ sc.compte.libelle}}
+                                <editable-ui-select-match
+                                        placeholder="Sélectionner un compte...">
+                                    {{$select.selected.libelle}}
+                                </editable-ui-select-match>
+                                <editable-ui-select-choices
+                                        refresh="fetch($select)"
+                                        refresh-delay="300"
+                                        repeat="compte as compte in comptes | filter: $select.search">
+                                    <div ng-bind-html="compte.libelle | highlight: $select.search"></div>
+                                    <div ng-show="($index == $select.items.length - 1) && !endOfList">
+                                        <button class="btn btn-xs btn-default"
+                                                style="width: 100%; margin-top: 5px;"
+                                                ng-mouseover="fetch($select, $event)"
+                                                ng-disabled="loading">afficher plus...
+                                        </button>
+                                    </div>
+                                </editable-ui-select-choices>
+                            </div>
+                        </td>
+                        <td ng-show="sc.isTresorerie">
+                            <div editable-ui-select="sc.tresorerie"
+                                 e-id="tresorerie"
+                                 e-input-sm=".ui-select-search, .ui-select-match, .ui-select-toggle"
+                                 ng-class="{'p-t-sm':(!operationForm.$visible)}"
+                                 data-e-form="operationForm" data-e-name="tresorerie" name="tresorerie"
+                                 e-position="auto"
+                                 e-reset-search-input="false" e-append-to-body="true"
+                                 data-e-style="min-width:500px !important;"
+                                 data-e-ng-model="sc.tresorerie">
+                                {{ sc.tresorerie.comptePhysique.libelle + ' / ' + sc.tresorerie.compteLogique.libelle}}
+                                <editable-ui-select-match
+                                        placeholder="Sélectionner un compte te trésorerie...">
+                                    {{$select.selected.comptePhysique.libelle + ' / ' +
+                                    $select.selected.compteLogique.libelle}}
+                                </editable-ui-select-match>
+                                <editable-ui-select-choices
+                                        refresh="fetchTresorerie($select)"
+                                        refresh-delay="300"
+                                        repeat="tresorerie as tresorerie in tresoreries | filter: $select.search">
+                                    <div ng-bind-html="(tresorerie.comptePhysique.libelle + ' / ' + tresorerie.compteLogique.libelle) | highlight: $select.search"></div>
+                                    <div ng-show="($index == $select.items.length - 1) && !endOfList">
+                                        <button class="btn btn-xs btn-default"
+                                                style="width: 100%; margin-top: 5px;"
+                                                ng-mouseover="fetchTresorerie($select, $event)"
+                                                ng-disabled="loading">afficher plus...
+                                        </button>
+                                    </div>
+                                </editable-ui-select-choices>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <br/>
+                <div class="btn-form">
+                    <div class="col-sm-offset-3 col-sm-6">
+                        <button type="submit" ng-disabled="operationForm.$waiting"
+                                md-ink-ripple id="btn-save"
+                                class="md-btn md-raised m-b btn-fw green"
+                                class="btn btn-primary">Enregistrer
+                        </button>
+                        <button type="button" ng-disabled="operationForm.$waiting"
+                                md-ink-ripple
+                                id="btn-cancel" class="md-btn md-flat btn-fw"
+                                ng-click="operationForm.$cancel()"
+                                class="btn btn-default">Annuler
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+

@@ -1,0 +1,98 @@
+<!-- entête titre et file d'arial -->
+<div class="card-heading">
+    <h2>Situation entre prévision et réalisation du budget
+        {{(budgetForSearch.identifiant !== null) ? '"' + budgetForSearch.libelle + '"' : ''}}</h2>
+    <div ncy-breadcrumb></div>
+</div>
+
+<!-- Corps liste  -->
+<div class="card-body no-padding-v">
+    <section class="row">
+        <div class="col-md-12">
+            {{comptePrecRealForm.$show()}}
+            <!-- formulaire de recherche-->
+            <md-toolbar class="md-table-toolbar md-default bg-light lt" layout="column"
+                        layout-align="center center">
+                <div layout="row" layout-align="center center">
+                    <form editable-form class="form-inline" onaftersave="doSearch()" name="comptePrecRealForm">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Budget
+                                : </label>
+                            <div class="col-sm-3">
+                                <div editable-ui-select="budgetForSearch"
+                                     e-id="budgetForSearch"
+                                     onbeforesave="validRequired($data)"
+                                     e-input-sm=".ui-select-search, .ui-select-match, .ui-select-toggle"
+                                     ng-class="{'p-t-sm':(!comptePrecRealForm.$visible)}"
+                                     data-e-form="comptePrecRealForm" data-e-name="budgetForSearch"
+                                     name="budgetForSearch"
+                                     e-position="auto"
+                                     e-reset-search-input="false" e-append-to-body="true"
+                                     data-e-style="min-width:300px !important;"
+                                     data-e-ng-model="budgetForSearch">
+                                    {{budgetForSearch}}
+                                    <editable-ui-select-match placeholder="Sélectionner un budget...">
+                                        {{$select.selected.libelle}}
+                                    </editable-ui-select-match>
+                                    <editable-ui-select-choices
+                                            refresh="fetchBudget($select)"
+                                            refresh-delay="500"
+                                            repeat="budget as budget in budgets | filter: $select.search">
+                                        <div ng-bind-html="budget.libelle | highlight: $select.search"></div>
+                                        <div ng-show="($index == $select.items.length - 1) && !endOfList">
+                                            <button class="btn btn-xs btn-default"
+                                                    style="width: 100%; margin-top: 5px;"
+                                                    ng-mouseover="fetchBudget($select, $event)"
+                                                    ng-disabled="loading">afficher plus...
+                                            </button>
+                                        </div>
+                                    </editable-ui-select-choices>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- button de recherche -->
+                        <div class="form-group">
+                            <button type="submit" id="btn-search"
+                                    class="btn btn-fw btn-primary">Afficher
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </md-toolbar>
+
+            <!-- liste des éléments du tableau -->
+            <md-table-container>
+                <table md-table md-progress="promise">
+                    <thead md-head md-order="" md-on-reorder="">
+                    <tr md-row>
+                        <th md-column><span>COMPTE</span></th>
+                        <th md-column><span>PARENT</span></th>
+                        <th md-column><span>PREVISION</span></th>
+                        <th md-column><span>REALISATION</span></th>
+                        <th md-column><span>RESTE</span></th>
+                    </tr>
+                    </thead>
+                    <tbody md-body>
+                    <tr md-row ng-repeat="realisationParPrevision in realisationParPrevisionList.realisationParPrevisions">
+                        <td md-cell>{{realisationParPrevision.compte.libelle}}</td>
+                        <td md-cell>{{realisationParPrevision.compte.compteParent.libelle}}</td>
+                        <td md-cell>{{realisationParPrevision.previsison | number}}</td>
+                        <td md-cell>{{realisationParPrevision.realisation | number}}</td>
+                        <td md-cell>{{realisationParPrevision.reste | number}}</td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr md-row>
+                            <td md-cell colspan="2">TOTAL</td>
+                            <td md-cell>{{realisationParPrevisionList.totalPrevision | number}}</td>
+                            <td md-cell>{{realisationParPrevisionList.totalRealisation | number}}</td>
+                            <td md-cell>{{realisationParPrevisionList.totalReste | number}}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <br/>
+            </md-table-container>
+        </div>
+    </section>
+</div>
+

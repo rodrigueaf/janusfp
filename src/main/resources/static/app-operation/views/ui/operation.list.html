@@ -1,0 +1,167 @@
+<!-- entête titre et file d'arial -->
+<div class="card-heading">
+    <h2>Liste des opérations {{(budget != null) ? 'du budget "'+ budget.libelle + '"' :
+        ((exploitation != null) ? 'de l\'exploitation "'+ exploitation.libelle + '"' : '')}}</h2>
+    <div ncy-breadcrumb></div>
+</div>
+
+<!-- entête buttons d'actions-->
+<div class="card-tools">
+    <ul class="list-inline">
+
+        <!-- action d'ajout -->
+        <li><a ui-sref="ui.operations.editmono({budget: budget, exploitation: exploitation})"
+               id="btn-add" class="md-btn md-flat ">
+            <span class="mdi-content-add-box i-20"></span>
+        </a></li>
+
+        <!-- action d'actualisation de la liste -->
+        <li><a md-ink-ripple id="btn-refresh"
+               class="md-btn md-flat" ng-click="refresh()">
+            <span class="mdi-navigation-refresh i-20"></span>
+        </a></li>
+
+        <!-- action vers d'autres menus de paramétrage -->
+        <li class="dropdown">
+            <a md-ink-ripple data-toggle="dropdown" id="btn-option"
+               class="md-btn md-flat" aria-expanded="false">
+                <span class="mdi-navigation-more-vert icon i-20"></span>
+                <div class="md-ripple-container"></div>
+            </a>
+            <ul
+                    class="dropdown-menu dropdown-menu-scale pull-right pull-up top text-color">
+                <li><a ui-sref="ui.comptes.edit">Ajouter un compte</a></li>
+                <li><a ui-sref="ui.comptes.list">Liste des comptes</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<!-- Corps liste  -->
+<div class="card-body no-padding-v">
+    <section class="row">
+        <div class="col-md-12">
+
+            <!-- formulaire de recherche-->
+            <md-toolbar class="md-table-toolbar md-default bg-light lt" layout="column"
+                        layout-align="center center">
+                <div layout="row" layout-align="center center">
+                    <form class="form-inline" role="form" ng-submit="doSearch()">
+
+                        <!-- champ description -->
+                        <div class="form-group">
+                            <label class="sr-only" for="description">Description</label> <input
+                                type="text" ng-model="filterForm.operation.description"
+                                class="form-control" id="description"
+                                placeholder="Description">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="sr-only">Type</label>
+                            <ui-select ng-model="filterForm.operation.operationType" id="operationType"
+                                       search-enabled="true" theme="bootstrap">
+                                <ui-select-match
+                                        placeholder="Sélectionner un type...">{{$select.selected | translate}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="operationType as operationType in operationTypes">
+                                    <div ng-bind-html="operationType | highlight: $select.search | translate"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+
+                        <!-- button de recherche -->
+                        <div class="form-group">
+                            <button type="submit" id="btn-search"
+                                    class="btn btn-fw btn-primary">Rechercher
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </md-toolbar>
+
+            <!-- pagination -->
+            <md-table-pagination md-limit="query.limit"
+                                 md-on-paginate="getAll"
+                                 md-limit-options="query.limitOption" md-page="query.page"
+                                 md-boundary-links="true" md-total="{{query.count}}"
+                                 md-label="{{query.label}}" md-page-select></md-table-pagination>
+
+            <!-- liste des éléments du tableau -->
+            <md-table-container>
+                <table md-table md-progress="promise" md-row-select multiple ng-model="operationsSelected">
+                    <thead md-head md-order="" md-on-reorder="">
+                    <tr md-row>
+                        <th md-column><span>DESCRIPTION</span></th>
+                        <th md-column><span>TYPE</span></th>
+                        <th md-column><span>MONTANT TOTAL</span></th>
+                        <th md-column><span>DATE</span></th>
+                        <th md-column md-numeric><span>ACTIONS</span></th>
+                    </tr>
+                    </thead>
+                    <tbody md-body>
+                    <tr md-row ng-repeat="operation in operations" md-select="operation" md-select-id="id"
+                        md-auto-select="false">
+                        <td md-cell>{{operation.description}}</td>
+                        <td md-cell>{{operation.operationType | translate}}</td>
+                        <td md-cell>{{operation.montantTotal | number}}</td>
+                        <td md-cell>{{operation.dateEnregistement | date:'dd/MM/yyyy'}}</td>
+
+                        <td md-cell>
+
+                            <!-- action détails -->
+                            <a id="btn-details"
+                               ui-sref="ui.operations.editmulti({operation: operation})"
+                               class="btn btn-xs btn-default text-warning-dk">
+                                <span class="fa fa-eye"></span>
+                            </a>
+
+                            <!-- action suppression -->
+                            <a id="btn-remove" class="btn btn-xs btn-default text-white bg-danger lt"
+                               ng-click="remove(operation.identifiant, $event)">
+                                <span class="fa fa-remove"></span>
+                            </a>
+
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+            <br/>
+
+            <!-- pagination -->
+            <md-table-pagination md-limit="query.limit"
+                                 md-on-paginate="getAll"
+                                 md-limit-options="query.limitOption" md-page="query.page"
+                                 md-boundary-links="true" md-total="{{query.count}}"
+                                 md-label="{{query.label}}" md-page-select></md-table-pagination>
+        </div>
+    </section>
+    <section class="row">
+        <div class="col-md-6">
+            <md-table-container>
+                <table md-table md-progress="promise" ng-show="showRecap">
+                    <thead md-head md-order="" md-on-reorder="">
+                    <tr md-row>
+                        <th md-column><span>DEPENSE</span></th>
+                        <th md-column><span>PRODUIT</span></th>
+                        <th md-column><span>PRÊT</span></th>
+                        <th md-column><span>EMPRUNT</span></th>
+                        <th md-column><span>RESTE</span></th>
+                    </tr>
+                    </thead>
+                    <tbody md-body>
+                    <tr md-row ng-repeat="recapitulatif in recapitulatifs" md-select-id="id"
+                        md-auto-select="false">
+                        <td md-cell>{{recapitulatif.depense | number}}</td>
+                        <td md-cell>{{recapitulatif.produit | number}}</td>
+                        <td md-cell>{{recapitulatif.pret | number}}</td>
+                        <td md-cell>{{recapitulatif.emprunt | number}}</td>
+                        <td md-cell>{{recapitulatif.reste | number}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+        </div>
+    </section>
+</div>
+
