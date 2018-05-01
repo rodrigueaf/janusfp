@@ -1,8 +1,8 @@
 package com.gt.gestfinance.repository.spec;
 
-import com.gt.base.repository.spec.BaseSpecifications;
-import com.gt.base.util.State;
+
 import com.gt.gestfinance.entity.Profil;
+import com.gt.gestfinance.util.State;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 

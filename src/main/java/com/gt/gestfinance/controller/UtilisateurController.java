@@ -1,8 +1,8 @@
 package com.gt.gestfinance.controller;
 
-import com.gt.base.controller.BaseEntityController;
-import com.gt.base.exception.CustomException;
-import com.gt.base.util.*;
+import com.gt.gestfinance.controller.BaseEntityController;
+import com.gt.gestfinance.exception.CustomException;
+import com.gt.gestfinance.util.*;
 import com.gt.gestfinance.dto.ManagedUserVM;
 import com.gt.gestfinance.entity.Utilisateur;
 import com.gt.gestfinance.filtreform.UtilisateurFormulaireDeFiltre;

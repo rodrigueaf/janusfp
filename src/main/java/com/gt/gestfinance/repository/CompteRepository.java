@@ -1,6 +1,6 @@
 package com.gt.gestfinance.repository;
 
-import com.gt.base.repository.BaseEntityRepository;
+
 import com.gt.gestfinance.entity.Compte;
 import com.gt.gestfinance.entity.CompteType;
 import org.springframework.data.jpa.repository.Query;

@@ -1,9 +1,8 @@
 package com.gt.gestfinance.service;
 
-import com.gt.base.exception.CustomException;
-import com.gt.base.service.IBaseEntityService;
 import com.gt.gestfinance.dto.OperationVM;
 import com.gt.gestfinance.entity.Operation;
+import com.gt.gestfinance.exception.CustomException;
 
 /**
  * Interface Service de l'entité Operation

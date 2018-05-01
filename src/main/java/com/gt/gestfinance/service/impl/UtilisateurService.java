@@ -1,21 +1,15 @@
 package com.gt.gestfinance.service.impl;
 
-import com.gt.base.exception.CustomException;
-import com.gt.base.service.impl.BaseEntityService;
-import com.gt.base.util.AuthoritiesConstants;
-import com.gt.base.util.CustomResourceBundleMessageSource;
-import com.gt.base.util.SecurityUtils;
 import com.gt.gestfinance.entity.Permission;
 import com.gt.gestfinance.entity.Profil;
 import com.gt.gestfinance.entity.Utilisateur;
+import com.gt.gestfinance.exception.CustomException;
 import com.gt.gestfinance.repository.OperationRepository;
 import com.gt.gestfinance.repository.PermissionRepository;
 import com.gt.gestfinance.repository.ProfilRepository;
 import com.gt.gestfinance.repository.UtilisateurRepository;
 import com.gt.gestfinance.service.IUtilisateurService;
-import com.gt.gestfinance.util.Constants;
-import com.gt.gestfinance.util.MPConstants;
-import com.gt.gestfinance.util.PermissionsConstants;
+import com.gt.gestfinance.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

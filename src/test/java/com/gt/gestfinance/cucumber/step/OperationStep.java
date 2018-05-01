@@ -1,6 +1,6 @@
 package com.gt.gestfinance.cucumber.step;
 
-import com.gt.base.exception.CustomException;
+import com.gt.gestfinance.exception.CustomException;
 import com.gt.gestfinance.AbstractFonctionalControllerTest;
 import com.gt.gestfinance.dto.OperationVM;
 import com.gt.gestfinance.entity.*;

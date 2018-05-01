@@ -1,7 +1,8 @@
 package com.gt.gestfinance.repository;
 
-import com.gt.base.repository.BaseEntityRepository;
+
 import com.gt.gestfinance.entity.Operation;
+import com.gt.gestfinance.entity.OperationType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -25,4 +26,10 @@ public interface OperationRepository extends BaseEntityRepository<Operation, Int
     Long countByOperationBudgetIdentifiant(Integer operationId);
 
     List<Operation> findByOperationBudgetIdentifiant(Integer operationId);
+
+    @Query("select coalesce(sum(o.montantTotal), 0) from Operation o where o.budget.identifiant = ?1 and o.operationType = ?2")
+    Double sumByBudgetIdentifiantAndOperationType(Integer budgetId, OperationType operationType);
+
+    @Query("select coalesce(sum(o.montantTotal), 0) from Operation o where o.exploitation.identifiant = ?1 and o.operationType = ?2")
+    Double sumByExploitationIdentifiantAndOperationType(Integer exploitationId, OperationType operationType);
 }

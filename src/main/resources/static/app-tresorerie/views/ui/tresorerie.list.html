@@ -89,26 +89,32 @@
                     </tr>
                     </thead>
                     <tbody md-body>
-                    <tr md-row ng-repeat="tresorerie in tresoreries" md-select="tresorerie" md-select-id="identifiant"
-                        md-auto-select="false">
-                        <td md-cell>{{tresorerie.comptePhysique.libelle}}</td>
-                        <td md-cell>{{tresorerie.compteLogique.libelle}}</td>
-                        <td md-cell>{{tresorerie.soldeCourant | number}}</td>
+                        <tr md-row ng-repeat="tresorerie in tresoreries" md-select="tresorerie" md-select-id="identifiant"
+                            md-auto-select="false">
+                            <td md-cell>{{tresorerie.comptePhysique.libelle}}</td>
+                            <td md-cell>{{tresorerie.compteLogique.libelle}}</td>
+                            <td md-cell>{{tresorerie.soldeCourant | number}}</td>
 
-                        <td md-cell>
-                            <!-- action détails -->
-                            <a id="btn-details" ui-sref="ui.tresoreries.edit({initData: tresorerie, isDetails : true})"
-                               class="btn btn-xs btn-default text-warning-dk">
-                                <span class="fa fa-eye"></span>
-                            </a>
+                            <td md-cell>
+                                <!-- action détails -->
+                                <a id="btn-details" ui-sref="ui.tresoreries.edit({initData: tresorerie, isDetails : true})"
+                                   class="btn btn-xs btn-default text-warning-dk">
+                                    <span class="fa fa-eye"></span>
+                                </a>
 
-                            <!-- action suppression -->
-                            <a id="btn-remove" class="btn btn-xs btn-default text-white bg-danger lt"
-                               ng-click="remove(tresorerie.identifiant, $event)">
-                                <span class="fa fa-remove"></span>
-                            </a>
-                        </td>
-                    </tr>
+                                <!-- action suppression -->
+                                <a id="btn-remove" class="btn btn-xs btn-default text-white bg-danger lt"
+                                   ng-click="remove(tresorerie.identifiant, $event)">
+                                    <span class="fa fa-remove"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    <tfoot>
+                        <tr md-row>
+                            <td md-cell colspan="3">TOTAL</td>
+                            <td md-cell colspan="2">{{soldeTotal | number}}</td>
+                        </tr>
+                    </tfoot>
                     </tbody>
                 </table>
             </md-table-container>

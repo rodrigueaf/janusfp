@@ -1,6 +1,6 @@
 package com.gt.gestfinance;
 
-import com.gt.base.controller.GlobalExceptionHandlerController;
+import com.gt.gestfinance.controller.GlobalExceptionHandlerController;
 import com.gt.gestfinance.util.CustomMockMvc;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;

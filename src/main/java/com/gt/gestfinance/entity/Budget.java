@@ -1,8 +1,7 @@
 package com.gt.gestfinance.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.gt.base.entity.AbstractAuditingEntity;
-import com.gt.base.util.BaseConstant;
+import com.gt.gestfinance.util.BaseConstant;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -27,6 +26,7 @@ public class Budget extends AbstractAuditingEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer identifiant;
     private String libelle;
+    @Transient
     private Double montantTotal;
     @Temporal(TemporalType.DATE)
     private Date dateDebut;

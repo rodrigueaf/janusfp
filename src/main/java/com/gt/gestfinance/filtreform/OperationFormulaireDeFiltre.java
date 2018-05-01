@@ -1,7 +1,7 @@
 package com.gt.gestfinance.filtreform;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.gt.base.filterform.BaseFilterForm;
+import com.gt.gestfinance.filtreform.BaseFilterForm;
 import com.gt.gestfinance.entity.Operation;
 import com.gt.gestfinance.repository.spec.OperationSpec;
 import org.springframework.data.jpa.domain.Specification;

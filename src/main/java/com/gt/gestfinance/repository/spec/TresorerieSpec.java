@@ -1,6 +1,6 @@
 package com.gt.gestfinance.repository.spec;
 
-import com.gt.base.repository.spec.BaseSpecifications;
+
 import com.gt.gestfinance.entity.Compte;
 import com.gt.gestfinance.entity.Tresorerie;
 import org.springframework.data.jpa.domain.Specification;

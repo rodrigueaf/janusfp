@@ -1,7 +1,5 @@
 package com.gt.gestfinance.config;
 
-import com.gt.base.util.AuthoritiesConstants;
-import com.gt.base.util.CustomResourceBundleMessageSource;
 import com.gt.gestfinance.entity.Permission;
 import com.gt.gestfinance.entity.Profil;
 import com.gt.gestfinance.entity.Utilisateur;
@@ -9,7 +7,9 @@ import com.gt.gestfinance.repository.PermissionRepository;
 import com.gt.gestfinance.repository.ProfilRepository;
 import com.gt.gestfinance.repository.UtilisateurRepository;
 import com.gt.gestfinance.service.IUtilisateurService;
+import com.gt.gestfinance.util.AuthoritiesConstants;
 import com.gt.gestfinance.util.Constants;
+import com.gt.gestfinance.util.CustomResourceBundleMessageSource;
 import com.gt.gestfinance.util.PermissionsConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

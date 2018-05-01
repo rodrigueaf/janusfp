@@ -76,6 +76,9 @@ angular.module('app')
                             parent: 'home',
                             label: 'Rapport'
                         },
+                        params: {
+                            filtreDataTresorerie: null
+                        },
                         data: {
                             permissions: {
                                 only: 'ROLE_TRESORERIE',

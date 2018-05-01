@@ -23,7 +23,7 @@ public class InfoContributorConfig implements InfoContributor {
 
     @Override
     public void contribute(Info.Builder builder) {
-        builder.withDetail("Nom", env.getProperty("spring.application.nom"))
+        builder.withDetail("Nom", env.getProperty("spring.application.name"))
                 .withDetail("Description", env.getProperty("spring.application.description"));
     }
 

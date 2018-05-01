@@ -1,11 +1,11 @@
 package com.gt.gestfinance.controller;
 
-import com.gt.base.controller.BaseEntityController;
-import com.gt.base.exception.CustomException;
-import com.gt.base.util.DefaultMP;
-import com.gt.base.util.Response;
-import com.gt.base.util.ResponseBuilder;
-import com.gt.base.util.StateWrapper;
+import com.gt.gestfinance.controller.BaseEntityController;
+import com.gt.gestfinance.exception.CustomException;
+import com.gt.gestfinance.util.DefaultMP;
+import com.gt.gestfinance.util.Response;
+import com.gt.gestfinance.util.ResponseBuilder;
+import com.gt.gestfinance.util.StateWrapper;
 import com.gt.gestfinance.dto.DateFiltre;
 import com.gt.gestfinance.entity.Compte;
 import com.gt.gestfinance.entity.Profil;

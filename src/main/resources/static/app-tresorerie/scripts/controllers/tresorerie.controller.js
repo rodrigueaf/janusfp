@@ -217,6 +217,8 @@ angular.module('app')
 
                 $scope.isResearch = false;
 
+                $scope.soldeTotal = 0;
+
                 /*********************************************************************************/
 
                 /**
@@ -235,6 +237,11 @@ angular.module('app')
                         $scope.promise.then(function (response) {
 
                                 $scope.tresoreries = response.data.content;
+
+                                for(var i = 0; i < $scope.tresoreries.length; i++){
+                                    $scope.soldeTotal += $scope.tresoreries[i].soldeCourant;
+                                }
+
                                 $scope.query.count = response.data.totalElements;
 
                             },

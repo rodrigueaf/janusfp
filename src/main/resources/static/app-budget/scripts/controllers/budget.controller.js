@@ -78,12 +78,10 @@ angular.module('app')
  */
 angular.module('app')
     .controller('BudgetsControllerList',
-        ['$scope', '$state', 'BudgetsService', 'uiNotif', 'utils',
-            function ($scope, $state, BudgetsService, uiNotif, utils) {
+        ['$scope', '$state', 'BudgetsService', 'uiNotif', 'utils', '$locale',
+            function ($scope, $state, BudgetsService, uiNotif, utils, $locale) {
 
-                /**
-                 * Initialisation des données
-                 */
+                $locale.NUMBER_FORMATS.GROUP_SEP = ' ';
 
                 $scope.budgets = [];
 

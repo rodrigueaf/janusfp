@@ -1,6 +1,6 @@
 package com.gt.gestfinance.repository.spec;
 
-import com.gt.base.repository.spec.BaseSpecifications;
+
 import com.gt.gestfinance.entity.Budget;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;

@@ -1,7 +1,7 @@
 angular.module('app')
     .controller('TresorerieGrdLivreController',
-        ['$scope', 'TresoreriesService', 'uiNotif', '$locale',
-            function ($scope, TresoreriesService, uiNotif, $locale) {
+        ['$scope', '$stateParams', 'TresoreriesService', 'uiNotif', '$locale',
+            function ($scope, $stateParams, TresoreriesService, uiNotif, $locale) {
                 $locale.NUMBER_FORMATS.GROUP_SEP = ' ';
                 $scope.grandLivreTresorerieList = {
                     operationDetails: [],
@@ -9,19 +9,20 @@ angular.module('app')
                     soldeCreditTotal: null
                 };
 
-                $scope.dateDebut = null;
-                $scope.dateFin = null;
-
-                $scope.tresorerieForSearch = {
-                    identifiant: null,
-                    libelle: null
+                $scope.filtreData = {
+                    dateDebut: null,
+                    dateFin: null,
+                    tresorerieForSearch: {
+                        identifiant: null,
+                        libelle: null
+                    }
                 };
 
                 $scope.doSearch = function () {
-                    if ($scope.tresorerieForSearch.identifiant !== null) {
+                    if ($scope.filtreData.tresorerieForSearch.identifiant !== null) {
                         $scope.promise = TresoreriesService.recupererLeGrandLivre(
-                            {tresorerieId: $scope.tresorerieForSearch.identifiant},
-                            {dateDebut: $scope.dateDebut, dateFin: $scope.dateFin}).$promise;
+                            {tresorerieId: $scope.filtreData.tresorerieForSearch.identifiant},
+                            {dateDebut: $scope.filtreData.dateDebut, dateFin: $scope.filtreData.dateFin}).$promise;
                         $scope.promise.then(function (response) {
                                 $scope.grandLivreTresorerieList = response.data;
                             },
@@ -32,6 +33,11 @@ angular.module('app')
                         uiNotif.info('La tresorerie est obligatoire');
                     }
                 };
+
+                if ($stateParams.filtreDataTresorerie !== null && !angular.isUndefined($stateParams.filtreDataTresorerie)) {
+                    $scope.filtreData = $stateParams.filtreDataTresorerie;
+                    $scope.doSearch();
+                }
 
                 $scope.fetchTresorerie = function ($select, $event) {
 

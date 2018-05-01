@@ -1,8 +1,8 @@
 package com.gt.gestfinance.cucumber.step;
 
-import com.gt.base.exception.CustomException;
 import com.gt.gestfinance.AbstractFonctionalControllerTest;
 import com.gt.gestfinance.entity.Budget;
+import com.gt.gestfinance.exception.CustomException;
 import com.gt.gestfinance.filtreform.BudgetFormulaireDeFiltre;
 import com.gt.gestfinance.util.CustomMockMvc;
 import com.gt.gestfinance.util.TestUtil;

@@ -1,12 +1,11 @@
 package com.gt.gestfinance.service.impl;
 
-import com.gt.base.exception.CustomException;
-import com.gt.base.service.impl.BaseEntityService;
 import com.gt.gestfinance.dto.OperationVM;
 import com.gt.gestfinance.entity.Operation;
 import com.gt.gestfinance.entity.OperationDetail;
 import com.gt.gestfinance.entity.OperationSens;
 import com.gt.gestfinance.entity.OperationType;
+import com.gt.gestfinance.exception.CustomException;
 import com.gt.gestfinance.repository.OperationDetailRepository;
 import com.gt.gestfinance.repository.OperationRepository;
 import com.gt.gestfinance.service.IOperationService;
@@ -14,8 +13,6 @@ import com.gt.gestfinance.service.ITresorerieService;
 import com.gt.gestfinance.util.MPConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * Classe Service de l'entité Operation

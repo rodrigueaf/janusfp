@@ -80,6 +80,7 @@
                         <th md-column><span>LIBELLE</span></th>
                         <th md-column><span>DATE DEBUT</span></th>
                         <th md-column><span>DATE FIN</span></th>
+                        <th md-column><span>SOLDE</span></th>
                         <th md-column md-numeric><span>ACTIONS</span></th>
                     </tr>
                     </thead>
@@ -89,7 +90,7 @@
                         <td md-cell>{{budget.libelle}}</td>
                         <td md-cell>{{budget.dateDebut | date:'dd/MM/yyyy'}}</td>
                         <td md-cell>{{budget.dateFin | date:'dd/MM/yyyy'}}</td>
-
+                        <td md-cell>{{budget.montantTotal | number}}</td>
                         <td md-cell>
                             <!-- action détails -->
                             <a id="btn-details" ui-sref="ui.budgets.edit({initData: budget, isDetails : true})"

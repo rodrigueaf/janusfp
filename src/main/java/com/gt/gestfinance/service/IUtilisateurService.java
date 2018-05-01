@@ -1,8 +1,7 @@
 package com.gt.gestfinance.service;
 
-import com.gt.base.exception.CustomException;
-import com.gt.base.service.IBaseEntityService;
 import com.gt.gestfinance.entity.Utilisateur;
+import com.gt.gestfinance.exception.CustomException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
