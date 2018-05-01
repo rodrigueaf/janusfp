@@ -1,6 +1,5 @@
 package com.gt.gestfinance.service;
 
-import com.gt.base.service.IBaseEntityService;
 import com.gt.gestfinance.entity.OperationDetail;
 import com.gt.gestfinance.util.OperationAvecMontantRestantList;
 

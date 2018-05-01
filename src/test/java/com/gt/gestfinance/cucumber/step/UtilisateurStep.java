@@ -1,15 +1,11 @@
 package com.gt.gestfinance.cucumber.step;
 
-import com.gt.base.exception.CustomException;
-import com.gt.base.util.State;
-import com.gt.base.util.StateWrapper;
 import com.gt.gestfinance.AbstractFonctionalControllerTest;
 import com.gt.gestfinance.dto.ManagedUserVM;
 import com.gt.gestfinance.entity.*;
+import com.gt.gestfinance.exception.CustomException;
 import com.gt.gestfinance.filtreform.UtilisateurFormulaireDeFiltre;
-import com.gt.gestfinance.util.CustomMockMvc;
-import com.gt.gestfinance.util.TestUtil;
-import com.gt.gestfinance.util.UrlConstants;
+import com.gt.gestfinance.util.*;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.fr.Alors;

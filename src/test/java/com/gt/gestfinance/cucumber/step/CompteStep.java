@@ -1,8 +1,8 @@
 package com.gt.gestfinance.cucumber.step;
 
-import com.gt.base.exception.CustomException;
-import com.gt.base.util.State;
-import com.gt.base.util.StateWrapper;
+import com.gt.gestfinance.exception.CustomException;
+import com.gt.gestfinance.util.State;
+import com.gt.gestfinance.util.StateWrapper;
 import com.gt.gestfinance.AbstractFonctionalControllerTest;
 import com.gt.gestfinance.entity.Compte;
 import com.gt.gestfinance.entity.Operation;

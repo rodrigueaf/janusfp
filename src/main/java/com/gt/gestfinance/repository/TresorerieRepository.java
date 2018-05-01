@@ -1,6 +1,6 @@
 package com.gt.gestfinance.repository;
 
-import com.gt.base.repository.BaseEntityRepository;
+
 import com.gt.gestfinance.entity.Budget;
 import com.gt.gestfinance.entity.Tresorerie;
 

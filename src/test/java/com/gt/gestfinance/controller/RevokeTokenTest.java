@@ -1,7 +1,7 @@
 package com.gt.gestfinance.controller;
 
-import com.gt.base.exception.CustomException;
 import com.gt.gestfinance.AbstractControllerTest;
+import com.gt.gestfinance.exception.CustomException;
 import com.gt.gestfinance.util.CustomMockMvc;
 import com.gt.gestfinance.util.UrlConstants;
 import org.junit.Before;

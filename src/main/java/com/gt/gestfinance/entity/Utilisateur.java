@@ -1,7 +1,6 @@
 package com.gt.gestfinance.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.gt.base.entity.AbstractAuditingEntity;
 import com.gt.gestfinance.util.Constants;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;

@@ -1,8 +1,7 @@
 package com.gt.gestfinance.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.gt.base.entity.AbstractAuditingEntity;
-import com.gt.base.util.BaseConstant;
+import com.gt.gestfinance.util.BaseConstant;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

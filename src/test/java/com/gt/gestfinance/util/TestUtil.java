@@ -93,12 +93,11 @@ public class TestUtil {
         }
 
         /**
-         * @see
-         * TypeSafeDiagnosingMatcher#matchesSafely(Object,
-         * Description)
          * @param item
          * @param mismatchDescription
          * @return
+         * @see TypeSafeDiagnosingMatcher#matchesSafely(Object,
+         * Description)
          */
         @Override
         protected boolean matchesSafely(String item, Description mismatchDescription) {
@@ -118,9 +117,8 @@ public class TestUtil {
         }
 
         /**
-         * @see
-         * TypeSafeDiagnosingMatcher#describeTo(Description)
          * @param description
+         * @see TypeSafeDiagnosingMatcher#describeTo(Description)
          */
         @Override
         public void describeTo(Description description) {
@@ -133,7 +131,7 @@ public class TestUtil {
      * same instant as the reference datetime
      *
      * @param date the reference datetime against which the examined string is
-     * checked
+     *             checked
      * @return
      */
     public static ZonedDateTimeMatcher sameInstant(ZonedDateTime date) {

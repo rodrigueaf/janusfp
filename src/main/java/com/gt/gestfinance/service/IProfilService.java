@@ -1,8 +1,7 @@
 package com.gt.gestfinance.service;
 
-import com.gt.base.exception.CustomException;
-import com.gt.base.service.IBaseEntityService;
 import com.gt.gestfinance.entity.Profil;
+import com.gt.gestfinance.exception.CustomException;
 
 import java.util.Set;
 

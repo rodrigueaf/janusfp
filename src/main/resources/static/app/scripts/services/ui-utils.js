@@ -12,7 +12,7 @@ angular.module('app')
     	    */
 	   	   utils.initPagination =  {
    				limit : 10,
-				limitOption : [10, 20, 30],
+				limitOption : [10, 20, 30, 100, 200],
 				page : 1,
 				order : 'Compte',
 				label : {page: 'Page:', rowsPerPage: 'Ligne par page:', of: 'sur'},

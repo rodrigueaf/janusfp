@@ -1,9 +1,8 @@
 package com.gt.gestfinance.service.impl;
 
-import com.gt.base.exception.CustomException;
-import com.gt.base.service.impl.BaseEntityService;
 import com.gt.gestfinance.entity.Permission;
 import com.gt.gestfinance.entity.Profil;
+import com.gt.gestfinance.exception.CustomException;
 import com.gt.gestfinance.repository.PermissionRepository;
 import com.gt.gestfinance.repository.ProfilRepository;
 import com.gt.gestfinance.repository.UtilisateurRepository;

@@ -1,12 +1,11 @@
 package com.gt.gestfinance;
 
-import com.gt.base.util.ApplicationContextProvider;
-import com.gt.base.util.CustomResourceBundleMessageSource;
+import com.gt.gestfinance.util.ApplicationContextProvider;
 import com.gt.gestfinance.util.Constants;
+import com.gt.gestfinance.util.CustomResourceBundleMessageSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerInitializedEvent;
@@ -38,7 +37,7 @@ import java.util.Map;
  * @version 1.0
  * @since 17/07/2017
  */
-@SpringBootApplication(scanBasePackages = {"com.gt.gestfinance", "com.gt.base"})
+@SpringBootApplication(scanBasePackages = {"com.gt.gestfinance"})
 public class ServiceApplication implements ApplicationListener<EmbeddedServletContainerInitializedEvent> {
 
     /**

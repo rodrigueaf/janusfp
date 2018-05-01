@@ -1,6 +1,6 @@
 package com.gt.gestfinance.util;
 
-import com.gt.base.exception.CustomException;
+import com.gt.gestfinance.exception.CustomException;
 import org.springframework.test.web.servlet.*;
 
 /**

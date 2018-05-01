@@ -1,10 +1,9 @@
 package com.gt.gestfinance.service.impl;
 
-import com.gt.base.exception.CustomException;
-import com.gt.base.service.impl.BaseEntityService;
 import com.gt.gestfinance.entity.Compte;
 import com.gt.gestfinance.entity.CompteType;
 import com.gt.gestfinance.entity.OperationDetail;
+import com.gt.gestfinance.exception.CustomException;
 import com.gt.gestfinance.repository.CompteRepository;
 import com.gt.gestfinance.repository.OperationDetailRepository;
 import com.gt.gestfinance.service.ICompteService;

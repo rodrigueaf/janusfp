@@ -1,9 +1,9 @@
 package com.gt.gestfinance.service.impl;
 
-import com.gt.base.util.State;
 import com.gt.gestfinance.entity.Utilisateur;
 import com.gt.gestfinance.exception.UserNotActivatedException;
 import com.gt.gestfinance.repository.UtilisateurRepository;
+import com.gt.gestfinance.util.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;

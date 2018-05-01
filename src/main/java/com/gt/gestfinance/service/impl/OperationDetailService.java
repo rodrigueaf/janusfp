@@ -1,6 +1,5 @@
 package com.gt.gestfinance.service.impl;
 
-import com.gt.base.service.impl.BaseEntityService;
 import com.gt.gestfinance.entity.Operation;
 import com.gt.gestfinance.entity.OperationDetail;
 import com.gt.gestfinance.repository.OperationDetailRepository;

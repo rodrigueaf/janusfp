@@ -1,6 +1,6 @@
 package com.gt.gestfinance.repository;
 
-import com.gt.base.repository.BaseEntityRepository;
+
 import com.gt.gestfinance.entity.Utilisateur;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

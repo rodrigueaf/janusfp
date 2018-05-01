@@ -1,26 +1,27 @@
 angular.module('app')
     .controller('CompteGrdLivreController',
-        ['$scope', 'ComptesService', 'uiNotif', '$locale',
-            function ($scope, ComptesService, uiNotif, $locale) {
+        ['$scope', '$stateParams', 'ComptesService', 'uiNotif', '$locale',
+            function ($scope, $stateParams, ComptesService, uiNotif, $locale) {
                 $locale.NUMBER_FORMATS.GROUP_SEP = ' ';
                 $scope.grandLivreList = {
                     operationDetails: [],
                     soldeTotal: null
                 };
 
-                $scope.dateDebut = null;
-                $scope.dateFin = null;
-
-                $scope.compteForSearch = {
-                    identifiant: null,
-                    libelle: null
+                $scope.filtreData = {
+                    dateDebut: null,
+                    dateFin: null,
+                    compteForSearch: {
+                        identifiant: null,
+                        libelle: null
+                    }
                 };
 
                 $scope.doSearch = function () {
-                    if ($scope.compteForSearch.identifiant !== null) {
+                    if ($scope.filtreData.compteForSearch.identifiant !== null) {
                         $scope.promise = ComptesService.recupererLeGrandLivre(
-                            {compteId: $scope.compteForSearch.identifiant},
-                            {dateDebut: $scope.dateDebut, dateFin: $scope.dateFin}).$promise;
+                            {compteId: $scope.filtreData.compteForSearch.identifiant},
+                            {dateDebut: $scope.filtreData.dateDebut, dateFin: $scope.filtreData.dateFin}).$promise;
                         $scope.promise.then(function (response) {
                                 $scope.grandLivreList = response.data;
                             },
@@ -31,6 +32,11 @@ angular.module('app')
                         uiNotif.info('Le compte est obligatoire');
                     }
                 };
+
+                if ($stateParams.filtreDataCompte !== null && !angular.isUndefined($stateParams.filtreDataCompte)) {
+                    $scope.filtreData = $stateParams.filtreDataCompte;
+                    $scope.doSearch();
+                }
 
                 $scope.fetchCompte = function ($select, $event) {
 

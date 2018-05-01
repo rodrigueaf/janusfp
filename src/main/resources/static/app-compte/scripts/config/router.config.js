@@ -97,6 +97,9 @@ angular.module('app')
                             parent: 'home',
                             label: 'Rapport'
                         },
+                        params: {
+                            filtreDataCompte: null
+                        },
                         data: {
                             permissions: {
                                 only: 'ROLE_COMPTE',

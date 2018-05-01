@@ -54,7 +54,9 @@ angular.module('app')
                             operation: null,
                             budget: null,
                             isMonoLigne: false,
-                            exploitation: null
+                            exploitation: null,
+                            filtreDataCompte: null,
+                            filtreDataTresorerie: null
                         },
                         controller: 'OperationsControllerEdit',
                         templateUrl: baseViewUri + 'operation.edit.html',

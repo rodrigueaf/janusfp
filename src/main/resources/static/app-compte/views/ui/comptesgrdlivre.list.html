@@ -1,7 +1,7 @@
 <!-- entête titre et file d'arial -->
 <div class="card-heading">
     <h2>Grand Livre du compte
-        {{(compteForSearch.identifiant !== null) ? '"' + compteForSearch.libelle + '"' : ''}}</h2>
+        {{(filtreData.compteForSearch.identifiant !== null) ? '"' + filtreData.compteForSearch.libelle + '"' : ''}}</h2>
     <div ncy-breadcrumb></div>
 </div>
 
@@ -19,17 +19,13 @@
                             <h5 class="col-sm-3 control-label">Compte
                                 : </h5>
                             <div class="col-sm-3">
-                                <div editable-ui-select="compteForSearch"
-                                     e-id="compteForSearch"
+                                <div editable-ui-select="filtreData.compteForSearch"
+                                     e-id="filtreData.compteForSearch"
                                      onbeforesave="validRequired($data)"
-                                     e-input-sm=".ui-select-search, .ui-select-match, .ui-select-toggle"
-                                     ng-class="{'p-t-sm':(!compteGrdLivreForm.$visible)}"
-                                     data-e-form="compteGrdLivreForm" data-e-name="compteForSearch"
-                                     name="compteForSearch"
-                                     e-position="auto"
-                                     e-reset-search-input="false" e-append-to-body="true"
-                                     data-e-ng-model="compteForSearch">
-                                    {{compteForSearch}}
+                                     data-e-form="compteGrdLivreForm" data-e-name="filtreData.compteForSearch"
+                                     name="filtreData.compteForSearch"
+                                     data-e-ng-model="filtreData.compteForSearch">
+                                    {{filtreData.compteForSearch}}
                                     <editable-ui-select-match placeholder="Sélectionner un compte...">
                                         {{$select.selected.libelle}}
                                     </editable-ui-select-match>
@@ -52,7 +48,7 @@
 
                         <div class="form-group">
                             <md-input-container class="no-margin bg-white md-block">
-                                <md-datepicker ng-model="dateDebut"
+                                <md-datepicker ng-model="filtreData.dateDebut"
                                                md-placeholder="Date début"
                                                md-open-on-focus>
                                 </md-datepicker>
@@ -61,7 +57,7 @@
 
                         <div class="form-group">
                             <md-input-container class="no-margin bg-white md-block">
-                                <md-datepicker ng-model="dateFin"
+                                <md-datepicker ng-model="filtreData.dateFin"
                                                md-placeholder="Date fin"
                                                md-open-on-focus>
                                 </md-datepicker>
@@ -86,6 +82,7 @@
                         <th md-column><span>DATE</span></th>
                         <th md-column><span>DESCRIPTION</span></th>
                         <th md-column><span>MONTANT</span></th>
+                        <th md-column><span>ACTIONS</span></th>
                     </tr>
                     </thead>
                     <tbody md-body>
@@ -93,12 +90,19 @@
                         <td md-cell>{{operationDetails.operation.dateEnregistement | date:'dd/MM/yyyy'}}</td>
                         <td md-cell>{{operationDetails.operation.description}}</td>
                         <td md-cell>{{operationDetails.montant | number}}</td>
+                        <td md-cell>
+                            <a id="btn-details"
+                               ui-sref="ui.operations.editmulti({operation: operationDetails.operation, filtreDataCompte: filtreData })"
+                               class="btn btn-xs btn-default text-warning-dk">
+                                <span class="fa fa-eye"></span>
+                            </a>
+                        </td>
                     </tr>
                     </tbody>
                     <tfoot>
                     <tr md-row>
                         <td md-cell colspan="2">TOTAL</td>
-                        <td md-cell>{{grandLivreList.soldeTotal | number}}</td>
+                        <td md-cell colspan="2">{{grandLivreList.soldeTotal | number}}</td>
                     </tr>
                     </tfoot>
                 </table>

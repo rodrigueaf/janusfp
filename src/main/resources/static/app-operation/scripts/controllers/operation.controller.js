@@ -21,6 +21,26 @@ angular.module('app')
                     operationDetails: []
                 };
 
+                $scope.filtreDataCompte = $stateParams.filtreDataCompte;
+                $scope.filtreDataTresorerie = $stateParams.filtreDataTresorerie;
+
+                $scope.goToList = function () {
+                    if ($scope.filtreDataCompte !== null) {
+                        $state.go('ui.comptes.grdlivre', {
+                            filtreDataCompte: $scope.filtreDataCompte
+                        });
+                    }else if ($scope.filtreDataTresorerie !== null) {
+                        $state.go('ui.tresoreries.grdlivre', {
+                            filtreDataTresorerie: $scope.filtreDataTresorerie
+                        });
+                    } else {
+                        $state.go('ui.operations.list', {
+                            budget: $scope.operationVM.operation.budget,
+                            exploitation: $scope.operationVM.operation.exploitation
+                        });
+                    }
+                };
+
                 $scope.isMonoLigne = $stateParams.isMonoLigne;
                 $scope.montantOperation = 0;
 
@@ -678,6 +698,8 @@ angular.module('app')
 
                             if ($stateParams.budget !== null || $stateParams.exploitation !== null) {
                                 if ($scope.showRecap) {
+                                    $scope.recapitulatif = angular.copy(recapitulatif);
+                                    $scope.recapitulatifs = [$scope.recapitulatif];
                                     calculerRecap($scope.operations);
                                 }
                             } else {
@@ -689,7 +711,7 @@ angular.module('app')
                                 }
                                 $scope.operations = operationTmp;
                             }
-                            $scope.query.count = $scope.operations.totalElements;
+                            $scope.query.count = $scope.operations.length;
                         },
                         function (error) {
                             uiNotif.info(error.data.message);
