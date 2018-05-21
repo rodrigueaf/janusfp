@@ -1,16 +1,13 @@
 package com.gt.gestfinance.service.impl;
 
-import com.gt.gestfinance.entity.Compte;
-import com.gt.gestfinance.entity.CompteType;
-import com.gt.gestfinance.entity.OperationDetail;
+import com.gt.gestfinance.entity.*;
 import com.gt.gestfinance.exception.CustomException;
 import com.gt.gestfinance.repository.CompteRepository;
 import com.gt.gestfinance.repository.OperationDetailRepository;
+import com.gt.gestfinance.repository.TresorerieRepository;
+import com.gt.gestfinance.repository.VersionRepository;
 import com.gt.gestfinance.service.ICompteService;
-import com.gt.gestfinance.util.GrandLivreList;
-import com.gt.gestfinance.util.MPConstants;
-import com.gt.gestfinance.util.RealisationParPrevision;
-import com.gt.gestfinance.util.RealisationParPrevisionList;
+import com.gt.gestfinance.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -35,6 +32,8 @@ import java.util.stream.Collectors;
 public class CompteService extends BaseEntityService<Compte, Integer> implements ICompteService {
 
     private OperationDetailRepository operationDetailRepository;
+    private VersionRepository versionRepository;
+    private TresorerieRepository tresorerieRepository;
 
     @Autowired
     public CompteService(CompteRepository repository) {
@@ -42,15 +41,17 @@ public class CompteService extends BaseEntityService<Compte, Integer> implements
     }
 
     @Override
-    public synchronized Compte save(Compte compte) throws CustomException {
-        controlerLIntegriteDuComtpe(compte);
-        return super.save(compte);
+    public VersionRepository getVersionRepository() {
+        return versionRepository;
     }
 
     @Override
-    public synchronized Compte saveAndFlush(Compte compte) throws CustomException {
+    public synchronized Compte save(Compte compte) throws CustomException {
         controlerLIntegriteDuComtpe(compte);
-        return super.saveAndFlush(compte);
+        reconstructionDuCmpte(compte);
+        compte = super.save(compte);
+        miseAJourDeLaVersion(compte, Version.MOTIF_AJOUT, compte.getIdentifiant());
+        return compte;
     }
 
     private void controlerLIntegriteDuComtpe(Compte compte) throws CustomException {
@@ -69,6 +70,21 @@ public class CompteService extends BaseEntityService<Compte, Integer> implements
             throw new CustomException(MPConstants.LE_LIBELLE_EXISTE_DEJA);
     }
 
+    private void reconstructionDuCmpte(Compte compte) {
+        if (compte.getCompteParent() != null && compte.getCompteParent().getIdentifiant() != null) {
+            compte.setCompteParent(findOne(compte.getCompteParent().getIdentifiant()));
+        }
+    }
+
+    @Override
+    public synchronized Compte saveAndFlush(Compte compte) throws CustomException {
+        controlerLIntegriteDuComtpe(compte);
+        reconstructionDuCmpte(compte);
+        compte = super.saveAndFlush(compte);
+        miseAJourDeLaVersion(compte, Version.MOTIF_MODIFICATION, compte.getIdentifiant());
+        return compte;
+    }
+
     @Override
     public boolean supprimer(Integer compteId) throws CustomException {
         Optional<Compte> o = ((CompteRepository) repository)
@@ -77,7 +93,33 @@ public class CompteService extends BaseEntityService<Compte, Integer> implements
             throw new CustomException(MPConstants.LE_COMPTE_A_DEJA_SOUS_COMPTE);
         if (!operationDetailRepository.findByCompteIdentifiant(compteId).isEmpty())
             throw new CustomException(MPConstants.LE_COMPTE_DEJA_UTILISER);
-        return super.delete(compteId);
+        if (super.delete(compteId)) {
+            miseAJourDeLaVersion(o.orElseThrow(CustomException::new), Version.MOTIF_SUPPRESSION, compteId);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean supprimerForcer(Integer compteId) {
+        operationDetailRepository.deleteByCompteIdentifiant(compteId);
+        List<Tresorerie> tresoreries = tresorerieRepository
+                .findByCompteLogiqueIdentifiantOrComptePhysiqueIdentifiant(compteId, compteId);
+        for (Tresorerie tresorerie : tresoreries) {
+            List<OperationDetail> operationDetails = operationDetailRepository
+                    .findByTresorerieIdentifiant(tresorerie.getIdentifiant());
+            for (OperationDetail operationDetail : operationDetails)
+                operationDetailRepository.delete(operationDetail.getIdentifiant());
+            tresorerieRepository.delete(tresorerie.getIdentifiant());
+            miseAJourDeLaVersion(Version.MOTIF_SUPPRESSION,
+                    tresorerie.getIdentifiant(), Tresorerie.class.getSimpleName());
+        }
+        Compte o = repository.findOne(compteId);
+        if (super.delete(compteId)) {
+            miseAJourDeLaVersion(o, Version.MOTIF_SUPPRESSION, compteId);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -141,6 +183,11 @@ public class CompteService extends BaseEntityService<Compte, Integer> implements
     }
 
     @Override
+    public List<Compte> recupererLaListeVersionnee(Integer[] ints) {
+        return ((CompteRepository) repository).recupererLaListeVersionnee(ints);
+    }
+
+    @Override
     public Page<Compte> findAll(Pageable p) {
         Page<Compte> comptePage = super.findAll(p);
         List<Compte> comptes = comptePage.getContent().stream()
@@ -155,5 +202,15 @@ public class CompteService extends BaseEntityService<Compte, Integer> implements
     @Autowired
     public void setOperationDetailRepository(OperationDetailRepository operationDetailRepository) {
         this.operationDetailRepository = operationDetailRepository;
+    }
+
+    @Autowired
+    public void setVersionRepository(VersionRepository versionRepository) {
+        this.versionRepository = versionRepository;
+    }
+
+    @Autowired
+    public void setTresorerieRepository(TresorerieRepository tresorerieRepository) {
+        this.tresorerieRepository = tresorerieRepository;
     }
 }

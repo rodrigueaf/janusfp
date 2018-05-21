@@ -3,10 +3,15 @@ package com.gt.gestfinance.service.impl;
 import com.gt.gestfinance.entity.OperationDetail;
 import com.gt.gestfinance.entity.OperationSens;
 import com.gt.gestfinance.entity.Tresorerie;
+import com.gt.gestfinance.entity.Version;
+import com.gt.gestfinance.exception.CustomException;
+import com.gt.gestfinance.repository.CompteRepository;
 import com.gt.gestfinance.repository.OperationDetailRepository;
 import com.gt.gestfinance.repository.TresorerieRepository;
+import com.gt.gestfinance.repository.VersionRepository;
 import com.gt.gestfinance.service.ITresorerieService;
 import com.gt.gestfinance.util.GrandLivreTresorerieList;
+import com.gt.gestfinance.util.MPConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -30,10 +35,60 @@ import java.util.stream.Collectors;
 public class TresorerieService extends BaseEntityService<Tresorerie, Integer> implements ITresorerieService {
 
     private OperationDetailRepository operationDetailRepository;
+    private VersionRepository versionRepository;
+    private CompteRepository compteRepository;
 
     @Autowired
     public TresorerieService(TresorerieRepository repository) {
         super(repository);
+    }
+
+    @Override
+    public VersionRepository getVersionRepository() {
+        return versionRepository;
+    }
+
+    @Override
+    public synchronized Tresorerie save(Tresorerie entity) throws CustomException {
+        reconstructionDeLaTresorerie(entity);
+        Tresorerie tresorerie = super.save(entity);
+        miseAJourDeLaVersion(tresorerie, Version.MOTIF_AJOUT, tresorerie.getIdentifiant());
+        return tresorerie;
+    }
+
+    private void reconstructionDeLaTresorerie(Tresorerie tresorerie) {
+        if (tresorerie.getCompteLogique() != null && tresorerie.getCompteLogique().getIdentifiant() != null) {
+            tresorerie.setCompteLogique(compteRepository.findOne(tresorerie.getCompteLogique().getIdentifiant()));
+        }
+        if (tresorerie.getComptePhysique() != null && tresorerie.getComptePhysique().getIdentifiant() != null) {
+            tresorerie.setComptePhysique(compteRepository.findOne(tresorerie.getComptePhysique().getIdentifiant()));
+        }
+    }
+
+    @Override
+    public synchronized Tresorerie saveAndFlush(Tresorerie entity) throws CustomException {
+        reconstructionDeLaTresorerie(entity);
+        Tresorerie tresorerie = super.saveAndFlush(entity);
+        miseAJourDeLaVersion(tresorerie, Version.MOTIF_MODIFICATION, tresorerie.getIdentifiant());
+        return tresorerie;
+    }
+
+    @Override
+    public boolean supprimer(Integer id) throws CustomException {
+        if (!operationDetailRepository.findByTresorerieIdentifiant(id).isEmpty()) {
+            throw new CustomException(MPConstants.LA_TRESORERIE_DEJA_UTILISER);
+        }
+        Tresorerie tresorerie = findOne(id);
+        if (super.delete(id)) {
+            miseAJourDeLaVersion(tresorerie, Version.MOTIF_SUPPRESSION, id);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean supprimerForcer(Integer tresorerieId) {
+        return false;
     }
 
     @Override
@@ -87,9 +142,23 @@ public class TresorerieService extends BaseEntityService<Tresorerie, Integer> im
         return grandLivreTresorerieList;
     }
 
+    @Override
+    public List<Tresorerie> recupererLaListeVersionnee(Integer[] ints) {
+        return ((TresorerieRepository) repository).recupererLaListeVersionnee(ints);
+    }
+
+    @Autowired
+    public void setVersionRepository(VersionRepository versionRepository) {
+        this.versionRepository = versionRepository;
+    }
+
     @Autowired
     public void setOperationDetailRepository(OperationDetailRepository operationDetailRepository) {
         this.operationDetailRepository = operationDetailRepository;
     }
 
+    @Autowired
+    public void setCompteRepository(CompteRepository compteRepository) {
+        this.compteRepository = compteRepository;
+    }
 }

@@ -55,12 +55,19 @@ public class MPConstants {
      */
     public static final String LE_LIBELLE_DU_BUDGET_EXSTE_DEJA = "error.code.budget.libelle.exist";
     public static final String LE_LIBELLE_DU_BUDGET_EST_OBLIGATOIRE = "error.code.budget.libelle.obligatoire";
+    public static final String LE_BUDGET_DEJA_UTILISER = "error.budget.deja.utiliser";
+    public static final String L_EXPLOITATION_DEJA_UTILISER = "error.exploitation.deja.utiliser";
 
     /**
      * ********** Exploitation *************
      */
     public static final String LE_LIBELLE_DU_EXPLOITATION_EXSTE_DEJA = "error.code.exploitation.libelle.exist";
     public static final String LE_LIBELLE_DU_EXPLOITATION_EST_OBLIGATOIRE = "error.code.exploitation.libelle.obligatoire";
+
+    /**
+     * ********** Tresorerie *************
+     */
+    public static final String LA_TRESORERIE_DEJA_UTILISER = "error.tresorerie.deja.utiliser";
 
     private MPConstants() {
     }

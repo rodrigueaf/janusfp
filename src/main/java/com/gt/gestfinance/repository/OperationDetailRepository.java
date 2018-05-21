@@ -33,4 +33,8 @@ public interface OperationDetailRepository extends BaseEntityRepository<Operatio
     List<OperationDetail> findByOperationBudgetIsNullAndCompteIdentifiant(Integer compteId);
 
     List<OperationDetail> findByOperationBudgetIsNullAndTresorerieIdentifiant(Integer tresorerieId);
+
+    List<OperationDetail> findByTresorerieIdentifiant(Integer tresorerieId);
+
+    void deleteByCompteIdentifiant(Integer compteId);
 }

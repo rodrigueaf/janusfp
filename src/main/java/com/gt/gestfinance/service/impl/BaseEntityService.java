@@ -1,26 +1,28 @@
 package com.gt.gestfinance.service.impl;
 
 import com.gt.gestfinance.entity.AbstractAuditingEntity;
+import com.gt.gestfinance.entity.Version;
 import com.gt.gestfinance.repository.BaseEntityRepository;
+import com.gt.gestfinance.repository.VersionRepository;
 import com.gt.gestfinance.service.IBaseEntityService;
 import com.gt.gestfinance.util.State;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.logging.Level;
 
 /**
  * Classe implémentant l'interface <code>BaseEntityService</code>
  *
- * @author <a href="mailto:ali.amadou@ace3i.com?">Yasser Ali</a>,
  * @param <T> : L'entié
  * @param <I> : La clé primaire
- *
+ * @author <a href="mailto:ali.amadou@ace3i.com?">Yasser Ali</a>,
  */
 public abstract class BaseEntityService<T extends AbstractAuditingEntity, I extends Serializable>
-                extends GenericService<T, I> 
-                implements IBaseEntityService<T, I> {
+        extends GenericService<T, I>
+        implements IBaseEntityService<T, I> {
 
     /**
      * Constructeur parent pour récupérer l'instance de chaque classe dérivé à
@@ -34,15 +36,15 @@ public abstract class BaseEntityService<T extends AbstractAuditingEntity, I exte
 
     @Override
     public Page<T> findByStateNotDeleted(Pageable p) {
-        return ((BaseEntityRepository<T, I>)repository).findByStateNot(State.DELETED, p);
+        return ((BaseEntityRepository<T, I>) repository).findByStateNot(State.DELETED, p);
     }
-    
+
     /**
      * @see com.gt.gestfinance.service.IBaseEntityService#findByState(com.gt.gestfinance.util.State, Pageable)
      */
     @Override
-    public Page<T> findByState(State state, Pageable p){
-    	 return ((BaseEntityRepository<T, I>)repository).findByState(state, p);
+    public Page<T> findByState(State state, Pageable p) {
+        return ((BaseEntityRepository<T, I>) repository).findByState(state, p);
     }
 
     @Override
@@ -85,5 +87,26 @@ public abstract class BaseEntityService<T extends AbstractAuditingEntity, I exte
             logger.error(e.getMessage());
             return false;
         }
+    }
+
+    VersionRepository getVersionRepository() {
+        return null;
+    }
+
+    void miseAJourDeLaVersion(T t, String type, I id) {
+        miseAJourDeLaVersion(type, id, t.getClass().getSimpleName());
+    }
+
+    void miseAJourDeLaVersion(String type, I id, String attribut) {
+        List<Version> vs = getVersionRepository().listerValeurDesc(attribut);
+        Version version = new Version();
+        version.setAttribut(attribut);
+        version.setMotif(id.toString() + "/" + type);
+        if (!vs.isEmpty()) {
+            version.setValeur(vs.get(0).getValeur() + 1);
+        } else {
+            version.setValeur(1);
+        }
+        getVersionRepository().save(version);
     }
 }

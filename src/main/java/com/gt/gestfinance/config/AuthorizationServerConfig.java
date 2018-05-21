@@ -95,11 +95,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
                     .authorizeRequests()
-                    .antMatchers("/comptes").authenticated()
-                    .antMatchers("/profils").authenticated()
-                    .antMatchers("/users").authenticated()
+//                    .antMatchers("/comptes").authenticated()
+//                    .antMatchers("/profils").authenticated()
+//                    .antMatchers("/users").authenticated()
                     .antMatchers(cheminAutoriser()).permitAll()
-                    .anyRequest().authenticated();
+                    .anyRequest().permitAll();
         }
 
         private String[] cheminAutoriser() {

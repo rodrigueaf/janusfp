@@ -1,20 +1,15 @@
 package com.gt.gestfinance.controller;
 
-import com.gt.gestfinance.controller.BaseEntityController;
-import com.gt.gestfinance.exception.CustomException;
-import com.gt.gestfinance.util.DefaultMP;
-import com.gt.gestfinance.util.Response;
-import com.gt.gestfinance.util.ResponseBuilder;
 import com.gt.gestfinance.dto.OperationVM;
 import com.gt.gestfinance.entity.Operation;
 import com.gt.gestfinance.entity.Profil;
+import com.gt.gestfinance.exception.CustomException;
 import com.gt.gestfinance.filtreform.OperationFormulaireDeFiltre;
 import com.gt.gestfinance.repository.OperationDetailRepository;
 import com.gt.gestfinance.repository.OperationRepository;
 import com.gt.gestfinance.service.IOperationDetailService;
 import com.gt.gestfinance.service.IOperationService;
-import com.gt.gestfinance.util.PermissionsConstants;
-import com.gt.gestfinance.util.UrlConstants;
+import com.gt.gestfinance.util.*;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -45,6 +40,21 @@ public class OperationController extends BaseEntityController<Operation, Integer
 
     public OperationController(IOperationService operationService) {
         super(operationService);
+    }
+
+    @RequestMapping(value = UrlConstants.Operation.OPERATION_RACINE + "/liste/{id}", method = RequestMethod.GET)
+    public ResponseEntity<Response> selectionnerListe(@PathVariable String id) {
+        String[] split = id.split("&");
+        Integer[] ints = new Integer[split.length];
+        for (int i = 0; i < split.length; i++) {
+            ints[i] = Integer.valueOf(split[i]);
+        }
+        return new ResponseEntity<>(ResponseBuilder.success()
+                .code(null)
+                .title(DefaultMP.TITLE_SUCCESS)
+                .message(DefaultMP.MESSAGE_SUCCESS)
+                .data(((IOperationService) service).recupererLaListeVersionnee(ints))
+                .buildI18n(), HttpStatus.OK);
     }
 
     /**
@@ -91,6 +101,30 @@ public class OperationController extends BaseEntityController<Operation, Integer
             @ApiParam(value = "L'identifiant de l'opération", required = true)
             @PathVariable Integer operationId) {
         return super.readOne(operationId);
+    }
+
+    /**
+     * GET /operations/vm/{operationId} : Retourne l'opération à partir de son identifiant.
+     *
+     * @param operationId L'identifiant du profil
+     * @return le ResponseEntity avec le status 200 (OK) et le profil, ou avec
+     * le status 500
+     */
+    @GetMapping(UrlConstants.Operation.OPERATION_VM_ID)
+    @ApiOperation(value = "Retourner l'opération à partir de son identifiant",
+            response = Response.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK")})
+    public ResponseEntity<Response> recupererUneOperationVM(
+            @ApiParam(value = "L'identifiant de l'opération", required = true)
+            @PathVariable Integer operationId) {
+
+        return new ResponseEntity<>(ResponseBuilder.info()
+                .code(null)
+                .title(DefaultMP.TITLE_SUCCESS)
+                .message(DefaultMP.MESSAGE_SUCCESS)
+                .data(((IOperationService) service).recupererLOperationVersionnee(operationId))
+                .buildI18n(), HttpStatus.OK);
     }
 
     /**
@@ -226,15 +260,23 @@ public class OperationController extends BaseEntityController<Operation, Integer
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK")})
     public ResponseEntity<Response> supprimerUneOperation(
-            @ApiParam(value = "L'identifiant de l'opération", required = true) @PathVariable Integer operationId)
-            throws CustomException {
+            @ApiParam(value = "L'identifiant de l'opération", required = true)
+            @PathVariable Integer operationId,
+            @ApiParam(value = "Si il s'agit d'une suppression forcée", required = true)
+            @RequestParam(required = false) Boolean forcer) throws CustomException {
+
+        boolean resultat;
+        if (forcer != null && forcer) {
+            resultat = ((IOperationService) service).supprimerForcer(operationId);
+        } else
+            resultat = ((IOperationService) service).supprimer(operationId);
 
         return new ResponseEntity<>(ResponseBuilder.success()
                 .code(null)
                 .title(DefaultMP.TITLE_SUCCESS)
                 .message(DefaultMP.MESSAGE_SUCCESS)
-                .data(((IOperationService) service).supprimer(operationId))
-                .buildI18n(), HttpStatus.OK);
+                .data(resultat)
+                .buildI18n(), HttpStatus.NO_CONTENT);
     }
 
     /**

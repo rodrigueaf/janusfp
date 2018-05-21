@@ -4,6 +4,8 @@ import com.gt.gestfinance.dto.OperationVM;
 import com.gt.gestfinance.entity.Operation;
 import com.gt.gestfinance.exception.CustomException;
 
+import java.util.List;
+
 /**
  * Interface Service de l'entité Operation
  *
@@ -19,4 +21,10 @@ public interface IOperationService extends IBaseEntityService<Operation, Integer
     Operation modifier(OperationVM operationVM) throws CustomException;
 
     boolean supprimer(Integer operationId) throws CustomException;
+
+    boolean supprimerForcer(Integer operationId) throws CustomException;
+
+    List<OperationVM> recupererLaListeVersionnee(Integer[] ints);
+
+    OperationVM recupererLOperationVersionnee(Integer operationId);
 }

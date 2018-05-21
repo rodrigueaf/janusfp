@@ -32,6 +32,21 @@ public class BudgetController extends BaseEntityController<Budget, Integer> {
         super(budgetService);
     }
 
+    @RequestMapping(value = UrlConstants.Budget.BUDGET_RACINE + "/liste/{id}", method = RequestMethod.GET)
+    public ResponseEntity<Response> selectionnerListe(@PathVariable String id) {
+        String[] split = id.split("&");
+        Integer[] ints = new Integer[split.length];
+        for (int i = 0; i < split.length; i++) {
+            ints[i] = Integer.valueOf(split[i]);
+        }
+        return new ResponseEntity<>(ResponseBuilder.success()
+                .code(null)
+                .title(DefaultMP.TITLE_SUCCESS)
+                .message(DefaultMP.MESSAGE_SUCCESS)
+                .data(((IBudgetService) service).recupererLaListeVersionnee(ints))
+                .buildI18n(), HttpStatus.OK);
+    }
+
     /**
      * POST /budgets : Créer un budget.
      *
@@ -125,9 +140,22 @@ public class BudgetController extends BaseEntityController<Budget, Integer> {
             @ApiResponse(code = 200, message = "OK")})
     public ResponseEntity<Response> supprimerUnBudget(
             @ApiParam(value = "L'identififant du budget", required = true)
-            @PathVariable Integer budgetId) throws CustomException {
+            @PathVariable Integer budgetId,
+            @ApiParam(value = "Si il s'agit d'une suppression forcée", required = true)
+            @RequestParam(required = false) Boolean forcer) throws CustomException {
 
-        return super.delete(budgetId);
+        boolean resultat;
+        if (forcer != null && forcer) {
+            resultat = ((IBudgetService) service).supprimerForcer(budgetId);
+        } else
+            resultat = ((IBudgetService) service).supprimer(budgetId);
+
+        return new ResponseEntity<>(ResponseBuilder.success()
+                .code(null)
+                .title(DefaultMP.TITLE_SUCCESS)
+                .message(DefaultMP.MESSAGE_SUCCESS)
+                .data(resultat)
+                .buildI18n(), HttpStatus.NO_CONTENT);
     }
 
     /**

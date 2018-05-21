@@ -18,7 +18,9 @@ import java.util.Objects;
  */
 @Entity
 @Table
-public class Budget extends AbstractAuditingEntity {
+public class
+
+Budget extends AbstractAuditingEntity {
 
     private static final long serialVersionUID = 1L;
 

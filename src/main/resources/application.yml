@@ -88,6 +88,7 @@ spring:
         username: root
         password:
         driver-class-name: com.mysql.jdbc.Driver
+        plateform: mysql
 
 server:
   port: 8181
@@ -112,6 +113,7 @@ spring:
         username: lsuhzhkdkqgncf
         password: af1caf2683613c89f47ac67f07126ee98dc7e0cfb8b41f9c9ea88241e58a71b4
         driverClassName: org.postgresql.Driver
+        plateform: postgresql
     jpa:
         database: POSTGRESQL
         show-sql: true

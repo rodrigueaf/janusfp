@@ -55,6 +55,7 @@ public class UrlConstants {
         public static final String OPERATION_DETAIL = "operations/{operationId}/operation-details";
         public static final String OPERATION_DETAIL_AVEC_RESTE = "operations/{operationId}/operation-details/reste";
         public static final String OPERATION_ID = "operations/{operationId}";
+        public static final String OPERATION_VM_ID = "operations/vm/{operationId}";
         public static final String OPERATION_RECHERCHE = "operations/search";
 
         private Operation() {
@@ -86,6 +87,14 @@ public class UrlConstants {
         public static final String TRESORERIE_GRD_LIVRE = "tresoreries/{tresorerieId}/grand-livre";
 
         private Tresorerie() {
+        }
+    }
+
+    public static class Version {
+        public static final String VERSION_RACINE = "versions";
+        public static final String VERSION_ID = "versions/{id}";
+
+        private Version() {
         }
     }
 

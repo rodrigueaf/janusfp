@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gt.gestfinance.util.BaseConstant;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Objects;
@@ -18,7 +17,6 @@ import java.util.Objects;
  * @since 23/06/2017
  */
 @Entity
-@Table
 public class Compte extends AbstractAuditingEntity {
 
     private static final long serialVersionUID = 1L;
@@ -26,15 +24,12 @@ public class Compte extends AbstractAuditingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer identifiant;
-    @NotNull
     @Size(min = 1, max = 300)
     @Column(length = 300, unique = true, nullable = false)
     private String libelle;
-    @NotNull
     @Column(nullable = false)
     private CompteType compteType = CompteType.AUTRE_COMPTE;
     private CompteForme compteForme;
-    @NotNull
     @Column(nullable = false)
     private Boolean utilisable = Boolean.FALSE;
     private Double soldeCourant = 0D;

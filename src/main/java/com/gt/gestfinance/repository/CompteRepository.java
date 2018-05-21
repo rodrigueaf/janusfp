@@ -4,6 +4,7 @@ package com.gt.gestfinance.repository;
 import com.gt.gestfinance.entity.Compte;
 import com.gt.gestfinance.entity.CompteType;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,4 +25,7 @@ public interface CompteRepository extends BaseEntityRepository<Compte, Integer> 
     Optional<Compte> findWithSousComptesByIdentifiant(Integer identifiant);
 
     List<Compte> findByCompteTypeNot(CompteType compteType);
+
+    @Query("select c from Compte c where c.id in :idSet")
+    List<Compte> recupererLaListeVersionnee(@Param("idSet") Integer[] idSet);
 }

@@ -1,9 +1,11 @@
 package com.gt.gestfinance.service;
 
 import com.gt.gestfinance.entity.Tresorerie;
+import com.gt.gestfinance.exception.CustomException;
 import com.gt.gestfinance.util.GrandLivreTresorerieList;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Interface Service de l'entité Tresorerie
@@ -18,4 +20,10 @@ public interface ITresorerieService extends IBaseEntityService<Tresorerie, Integ
     Double calculerLeSolde(Tresorerie tresorerie);
 
     GrandLivreTresorerieList recupererLeGrandLivre(Integer tresorerieId, Date dateDebut, Date dateFin);
+
+    List<Tresorerie> recupererLaListeVersionnee(Integer[] ints);
+
+    boolean supprimer(Integer id) throws CustomException;
+
+    boolean supprimerForcer(Integer tresorerieId);
 }

@@ -1,6 +1,9 @@
 package com.gt.gestfinance.service;
 
 import com.gt.gestfinance.entity.Budget;
+import com.gt.gestfinance.exception.CustomException;
+
+import java.util.List;
 
 /**
  * Interface Service de l'entité Budget
@@ -11,4 +14,10 @@ import com.gt.gestfinance.entity.Budget;
  * @since 23/10/2017
  */
 public interface IBudgetService extends IBaseEntityService<Budget, Integer> {
+
+    List<Budget> recupererLaListeVersionnee(Integer[] ints);
+
+    boolean supprimerForcer(Integer budgetId) throws CustomException;
+
+    boolean supprimer(Integer budgetId) throws CustomException;
 }

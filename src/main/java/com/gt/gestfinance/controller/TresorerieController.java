@@ -1,17 +1,12 @@
 package com.gt.gestfinance.controller;
 
-import com.gt.gestfinance.controller.BaseEntityController;
-import com.gt.gestfinance.exception.CustomException;
-import com.gt.gestfinance.util.DefaultMP;
-import com.gt.gestfinance.util.Response;
-import com.gt.gestfinance.util.ResponseBuilder;
 import com.gt.gestfinance.dto.DateFiltre;
 import com.gt.gestfinance.entity.Profil;
 import com.gt.gestfinance.entity.Tresorerie;
+import com.gt.gestfinance.exception.CustomException;
 import com.gt.gestfinance.filtreform.TresorerieFormulaireDeFiltre;
 import com.gt.gestfinance.service.ITresorerieService;
-import com.gt.gestfinance.util.PermissionsConstants;
-import com.gt.gestfinance.util.UrlConstants;
+import com.gt.gestfinance.util.*;
 import io.swagger.annotations.*;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
@@ -36,6 +31,21 @@ public class TresorerieController extends BaseEntityController<Tresorerie, Integ
 
     public TresorerieController(ITresorerieService tresorerieService) {
         super(tresorerieService);
+    }
+
+    @RequestMapping(value = UrlConstants.Tresorerie.TRESORERIE_RACINE + "/liste/{id}", method = RequestMethod.GET)
+    public ResponseEntity<Response> selectionnerListe(@PathVariable String id) {
+        String[] split = id.split("&");
+        Integer[] ints = new Integer[split.length];
+        for (int i = 0; i < split.length; i++) {
+            ints[i] = Integer.valueOf(split[i]);
+        }
+        return new ResponseEntity<>(ResponseBuilder.success()
+                .code(null)
+                .title(DefaultMP.TITLE_SUCCESS)
+                .message(DefaultMP.MESSAGE_SUCCESS)
+                .data(((ITresorerieService) service).recupererLaListeVersionnee(ints))
+                .buildI18n(), HttpStatus.OK);
     }
 
     /**
@@ -132,9 +142,22 @@ public class TresorerieController extends BaseEntityController<Tresorerie, Integ
             @ApiResponse(code = 200, message = "OK")})
     public ResponseEntity<Response> supprimerUnTresorerie(
             @ApiParam(value = "L'identififant de la trésorerie", required = true)
-            @PathVariable Integer tresorerieId) throws CustomException {
+            @PathVariable Integer tresorerieId,
+            @ApiParam(value = "Si il s'agit d'une suppression forcée", required = true)
+            @RequestParam(required = false) Boolean forcer) throws CustomException {
 
-        return super.delete(tresorerieId);
+        boolean resultat;
+        if (forcer != null && forcer) {
+            resultat = ((ITresorerieService) service).supprimerForcer(tresorerieId);
+        } else
+            resultat = ((ITresorerieService) service).supprimer(tresorerieId);
+
+        return new ResponseEntity<>(ResponseBuilder.success()
+                .code(null)
+                .title(DefaultMP.TITLE_SUCCESS)
+                .message(DefaultMP.MESSAGE_SUCCESS)
+                .data(resultat)
+                .buildI18n(), HttpStatus.NO_CONTENT);
     }
 
     /**

@@ -1,18 +1,12 @@
 package com.gt.gestfinance.controller;
 
-import com.gt.gestfinance.controller.BaseEntityController;
-import com.gt.gestfinance.exception.CustomException;
-import com.gt.gestfinance.util.DefaultMP;
-import com.gt.gestfinance.util.Response;
-import com.gt.gestfinance.util.ResponseBuilder;
-import com.gt.gestfinance.util.StateWrapper;
 import com.gt.gestfinance.dto.DateFiltre;
 import com.gt.gestfinance.entity.Compte;
 import com.gt.gestfinance.entity.Profil;
+import com.gt.gestfinance.exception.CustomException;
 import com.gt.gestfinance.filtreform.CompteFormulaireDeFiltre;
 import com.gt.gestfinance.service.ICompteService;
-import com.gt.gestfinance.util.PermissionsConstants;
-import com.gt.gestfinance.util.UrlConstants;
+import com.gt.gestfinance.util.*;
 import io.swagger.annotations.*;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
@@ -23,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URISyntaxException;
 import java.util.Collections;
-import java.util.Date;
 
 /**
  * Contrôleur de gestion des comptes
@@ -39,6 +32,21 @@ public class CompteController extends BaseEntityController<Compte, Integer> {
 
     public CompteController(ICompteService compteService) {
         super(compteService);
+    }
+
+    @RequestMapping(value = UrlConstants.Compte.COMPTE_RACINE + "/liste/{id}", method = RequestMethod.GET)
+    public ResponseEntity<Response> selectionnerListe(@PathVariable String id) {
+        String[] split = id.split("&");
+        Integer[] ints = new Integer[split.length];
+        for (int i = 0; i < split.length; i++) {
+            ints[i] = Integer.valueOf(split[i]);
+        }
+        return new ResponseEntity<>(ResponseBuilder.success()
+                .code(null)
+                .title(DefaultMP.TITLE_SUCCESS)
+                .message(DefaultMP.MESSAGE_SUCCESS)
+                .data(((ICompteService) service).recupererLaListeVersionnee(ints))
+                .buildI18n(), HttpStatus.OK);
     }
 
     /**
@@ -186,14 +194,22 @@ public class CompteController extends BaseEntityController<Compte, Integer> {
             @ApiResponse(code = 200, message = "OK")})
     public ResponseEntity<Response> supprimerUnCompte(
             @ApiParam(value = "L'identififant du compte", required = true)
-            @PathVariable Integer compteId) throws CustomException {
+            @PathVariable Integer compteId,
+            @ApiParam(value = "Si il s'agit d'une suppression forcée", required = true)
+            @RequestParam(required = false) Boolean forcer) throws CustomException {
+
+        boolean resultat;
+        if (forcer != null && forcer) {
+            resultat = ((ICompteService) service).supprimerForcer(compteId);
+        } else
+            resultat = ((ICompteService) service).supprimer(compteId);
 
         return new ResponseEntity<>(ResponseBuilder.success()
                 .code(null)
                 .title(DefaultMP.TITLE_SUCCESS)
                 .message(DefaultMP.MESSAGE_SUCCESS)
-                .data(((ICompteService) service).supprimer(compteId))
-                .buildI18n(), HttpStatus.OK);
+                .data(resultat)
+                .buildI18n(), HttpStatus.NO_CONTENT);
     }
 
     /**
