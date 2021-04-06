@@ -84,9 +84,6 @@ spring:
         url: jdbc:mysql://${spring.datasource.hostname}:${spring.datasource.port}/${spring.datasource.database}
         hostname: localhost
         port: 3306
-        database: gestfinance-db-dev3
-        username: root
-        password:
         driver-class-name: com.mysql.jdbc.Driver
 
 server:
@@ -108,9 +105,6 @@ spring:
 spring:
     profiles: prod
     datasource:
-        url: jdbc:postgresql://ec2-54-246-84-200.eu-west-1.compute.amazonaws.com:5432/d4n3kcqmvk1b98
-        username: lsuhzhkdkqgncf
-        password: af1caf2683613c89f47ac67f07126ee98dc7e0cfb8b41f9c9ea88241e58a71b4
         driverClassName: org.postgresql.Driver
     jpa:
         database: POSTGRESQL
